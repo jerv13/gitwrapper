@@ -1,0 +1,37 @@
+{
+    "name": "reliv/git",
+    "description": "A OOP Wrapper to the Git command line client",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "reliv",
+        "git"
+    ],
+    "homepage": "http://www.reliv.com/",
+    "authors": [
+        {
+            "name": "Westin Shafer",
+            "email": "wshafer@relivinc.com",
+            "homepage": "http://www.reliv.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "suggest": {
+        "zendframework/zendframework": "While not required, this module was built for use with in the Zend Framework 2 environment."
+    },
+    "require-dev": {
+        "zendframework/zendframework": "2.*",
+        "phpunit/phpunit": "~4.0",
+        "squizlabs/php_codesniffer": "1.5.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Rcm": "src/"
+        },
+        "classmap": [
+            "./"
+        ]
+    }
+}
