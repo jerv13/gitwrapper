@@ -20,7 +20,6 @@
 
 namespace Git\Command;
 
-use Git\Exception\CommandNotImplementedException;
 use Git\Exception\DirectoryNotFoundException;
 use Git\Exception\InvalidArgumentException;
 use Git\Exception\MethodNotFoundException;
@@ -42,27 +41,28 @@ use Git\Exception\MethodNotFoundException;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  *
- * @method Add      add()      Add file contents to the index
- * @method Bisect   bisect()   Find by binary search the change that introduced a bug
- * @method Branch   branch()   List, create, or delete branches
- * @method Checkout checkout() Checkout a branch or paths to the working tree
- * @method GitClone clone()    Clone a repository into a new directory
- * @method Commit   commit()   Record changes to the repository
- * @method Diff     diff()     Show changes between commits, commit and working tree, etc
- * @method Fetch    fetch()    Download objects and refs from another repository
- * @method Grep     grep()     Print lines matching a pattern
- * @method Init     init()     Create an empty Git repository or reinitialize an existing one
- * @method Log      log()      Show commit logs
- * @method Merge    merge()    Join two or more development histories together
- * @method Mv       mv()       Move or rename a file, a directory, or a symlink
- * @method Pull     pull()     Fetch from and integrate with another repository or a local branch
- * @method Push     push()     Update remote refs along with associated objects
- * @method Rebase   rebase()   Forward-port local commits to the updated upstream head
- * @method Reset    reset()    Reset current HEAD to the specified state
- * @method Rm       rm()       Remove files from the working tree and from the index
- * @method Show     show()     Show various types of objects
- * @method Status   status()   Show the working tree status
- * @method Tag      tag()      Create, list, delete or verify a tag object signed with GPG
+ * @method Add      add()                       Add file contents to the index
+ * @method Bisect   bisect()                    Find by binary search the change that introduced a bug
+ * @method Branch   branch()                    List, create, or delete branches
+ * @method Checkout checkout()                  Checkout a branch or paths to the working tree
+ * @method GitClone clone($from, $toDir = null) Clone a repository into a new directory
+ * @method Commit   commit()                    Record changes to the repository
+ * @method Diff     diff()                      Show changes between commits, commit and working tree, etc
+ * @method Fetch    fetch()                     Download objects and refs from another repository
+ * @method Grep     grep()                      Print lines matching a pattern
+ * @method Init     init()                      Create an empty Git repository or reinitialize an existing one
+ * @method Log      log()                       Show commit logs
+ * @method Merge    merge()                     Join two or more development histories together
+ * @method Mv       mv()                        Move or rename a file, a directory, or a symlink
+ * @method Pull     pull()                      Fetch from and integrate with another repository or a local branch
+ * @method Push     push()                      Update remote refs along with associated objects
+ * @method Rebase   rebase()                    Forward-port local commits to the updated upstream head
+ * @method Reset    reset()                     Reset current HEAD to the specified state
+ * @method RevParse revParse()                  Pick out and massage parameters
+ * @method Rm       rm()                        Remove files from the working tree and from the index
+ * @method Show     show()                      Show various types of objects
+ * @method Status   status()                    Show the working tree status
+ * @method Tag      tag()                       Create, list, delete or verify a tag object signed with GPG
  */
 class Git extends CommandAbstract
 {
@@ -138,18 +138,11 @@ class Git extends CommandAbstract
     /**
      * Prints the Git suite version that the git program came from.
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function version($value = true)
+    public function version()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->version = $value;
-
+        $this->version = !$this->version;
         return $this;
     }
 
@@ -163,18 +156,11 @@ class Git extends CommandAbstract
      * displayed. See git-help(1) for more information, because git --help
      * ...  is converted internally into git help ....
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function help($value = true)
+    public function help()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->help = $value;
-
+        $this->help = !$this->help;
         return $this;
     }
 
@@ -264,37 +250,23 @@ class Git extends CommandAbstract
      * Print the path, without trailing slash, where Git's HTML
      * documentation is installed and exit.
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function htmlPath($value = true)
+    public function htmlPath()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->htmlPath = $value;
-
+        $this->htmlPath = !$this->htmlPath;
         return $this;
     }
 
     /**
-     * Print the manpath (see man(1)) for the man pages for this version
+     * Print the manPath (see man(1)) for the man pages for this version
      * of Git and exit.
-     *
-     * @param bool $value Turn on and off
      *
      * @return $this
      */
-    public function manPath($value = true)
+    public function manPath()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->manPath = $value;
-
+        $this->manPath = !$this->manPath;
         return $this;
     }
 
@@ -302,18 +274,11 @@ class Git extends CommandAbstract
      * Print the path where the Info files documenting this version of Git
      * are installed and exit.
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function infoPath($value = true)
+    public function infoPath()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->infoPath = $value;
-
+        $this->infoPath = !$this->infoPath;
         return $this;
     }
 
@@ -322,36 +287,22 @@ class Git extends CommandAbstract
      * a terminal. This overrides the pager.<cmd> configuration options
      * (see the "Configuration Mechanism" section below).
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function paginate($value = true)
+    public function paginate()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->paginate = $value;
-
+        $this->paginate = !$this->paginate;
         return $this;
     }
 
     /**
      * Do not pipe Git output into a pager.
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function noPager($value = true)
+    public function noPager()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->noPager = $value;
-
+        $this->noPager = !$this->noPager;
         return $this;
     }
 
@@ -422,38 +373,25 @@ class Git extends CommandAbstract
     }
 
     /**
-     * Prints the Git suite version that the git program came from.
-     *
-     * @param bool $value Turn on and off
+     * Treat the repository as a bare repository.
      *
      * @return $this
      */
-    public function bare($value = true)
+    public function bare()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->bare = $value;
+        $this->bare = !$this->bare;
 
         return $this;
     }
 
     /**
-     * Prints the Git suite version that the git program came from.
-     *
-     * @param bool $value Turn on and off
+     * Do not use replacement refs to replace Git objects.
      *
      * @return $this
      */
-    public function noReplaceObjects($value = true)
+    public function noReplaceObjects()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->noReplaceObjects = $value;
-
+        $this->noReplaceObjects = !$this->noReplaceObjects;
         return $this;
     }
 
@@ -462,18 +400,11 @@ class Git extends CommandAbstract
      * This is equivalent to setting the GIT_LITERAL_PATHSPECS environment
      * variable to 1.
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function literalPathspecs($value = true)
+    public function literalPathspecs()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->literalPathspecs = $value;
-
+        $this->literalPathspecs = !$this->literalPathspecs;
         return $this;
     }
 
@@ -482,18 +413,11 @@ class Git extends CommandAbstract
      * GIT_GLOB_PATHSPECS environment variable to 1. Disabling globbing on
      * individual pathspecs can be done using pathspec magic ":(literal)"
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function globPathspecs($value = true)
+    public function globPathspecs()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->globPathspecs = $value;
-
+        $this->globPathspecs = !$this->globPathspecs;
         return $this;
     }
 
@@ -503,18 +427,11 @@ class Git extends CommandAbstract
      * globbing on individual pathspecs can be done using pathspec magic
      * ":(glob)"
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function noGlobPathspecs($value = true)
+    public function noGlobPathspecs()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->noGlobPathspecs = $value;
-
+        $this->noGlobPathspecs = !$this->noGlobPathspecs;
         return $this;
     }
 
@@ -522,18 +439,11 @@ class Git extends CommandAbstract
      * Add "icase" magic to all pathspec. This is equivalent to setting
      * the GIT_ICASE_PATHSPECS environment variable to 1.
      *
-     * @param bool $value Turn on and off
-     *
      * @return $this
      */
-    public function iCasePathspecs($value = true)
+    public function iCasePathspecs()
     {
-        if (!is_bool($value)) {
-            throw new InvalidArgumentException('Only boolean values allowed for this property');
-        }
-
-        $this->iCasePathspecs = $value;
-
+        $this->iCasePathspecs = !$this->iCasePathspecs;
         return $this;
     }
 

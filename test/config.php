@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Configuration for unit tests
+ * Configuration for Unit tests
  *
- * This file contains the Configuration for unit tests
+ * This file contains the Configuration for Unit tests
  *
  * PHP version 5.3
  *
@@ -19,5 +19,6 @@
  */
 return array(
     'gitPath' => trim(`which git`),
-    'tempFolder' => '/tmp',
+    'tempFolder' => '/tmp/reliv/git',
+    'tempBareRepo' => '/tests/bare', //Relative to temp dir
 );

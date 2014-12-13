@@ -45,13 +45,18 @@ abstract class CommandAbstract implements CommandInterface
     protected $wrappedCommand;
 
     /**
+     * @var string Path to Git repository
+     */
+    protected $repositoryPath;
+
+    /**
      * Constructor.
      *
-     * @param CommandInterface $command Command to wrap
+     * @param CommandInterface $parent Command to wrap
      */
-    public function __construct(CommandInterface $command)
+    public function __construct(CommandInterface $parent)
     {
-        $this->wrappedCommand = $command->getCommand();
+        $this->wrappedCommand = $parent;
     }
 
     /**
@@ -59,16 +64,38 @@ abstract class CommandAbstract implements CommandInterface
      *
      * @return mixed
      */
-    abstract public function getCommand();
+    public function getCommand()
+    {
+        $cmd = '';
+
+        if ($this->wrappedCommand instanceof CommandInterface) {
+            $cmd = $this->wrappedCommand->getCommand();
+        }
+
+        return $cmd;
+    }
 
 
     /**
      * Execute the command.  Must return the Command Response object
      *
-     * @return mixed
+     * @return Response
      */
     public function execute()
     {
+        $response = new Response();
+
+        $command = $this->getCommand().' 2>&1';
+
+        $output = array();
+        $statusCode = null;
+
+        exec($command, $output, $statusCode);
+
+        $response->setStatusCode($statusCode);
+        $response->setMessage($output);
+
+        return $response;
 
     }
 }

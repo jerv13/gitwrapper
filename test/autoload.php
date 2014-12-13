@@ -1,10 +1,10 @@
 <?php
 /**
- * Testing auto loader.  Please require this file for all unit tests.
+ * Testing auto loader.  Please require this file for all Unit tests.
  *
- * This file contains the auto loader for unit tests.  We prefer that unit tests are available to be run independently,
+ * This file contains the auto loader for Unit tests.  We prefer that Unit tests are available to be run independently,
  * or in a group.  The best way we have found to ensure this works is to include the below code at the beginning of your
- * unit test.
+ * Unit test.
  *
  * PHP version 5.3
  *
@@ -32,7 +32,7 @@ if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
 
 if (empty($autoload)) {
     trigger_error(
-        'Please make sure to run composer install before running unit tests',
+        'Please make sure to run composer install before running Unit tests',
         E_USER_ERROR
     );
 }

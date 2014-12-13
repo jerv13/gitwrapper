@@ -20,6 +20,8 @@
 
 namespace Git\Command;
 
+use Git\Exception\InvalidArgumentException;
+
 /**
  * Command Response
  *
