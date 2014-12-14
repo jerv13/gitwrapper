@@ -19,6 +19,7 @@
 
 namespace GitTest\Integration\Command;
 
+use Git\Command\Git;
 use Git\Command\GitClone;
 
 require_once __DIR__ . '/Base.php';
@@ -46,6 +47,32 @@ class GitCloneTest extends Base
     /** @var \Git\Command\GitClone */
     protected $command;
 
+    protected $repoToClone;
+    protected $clonedRepoDir;
+
+    public function setup()
+    {
+        $config = $this->getConfig();
+        $this->initGitRepositories();
+
+        $this->repoToClone = $config['tempFolder'].$config['tempBareRepo'];
+        $this->clonedRepoDir = $config['tempFolder'].'/cloneTest';
+
+        $this->gitCommandWrapper = new Git($config['gitPath']);
+
+        $this->command = new GitClone(
+            $this->gitCommandWrapper,
+            $this->repoToClone,
+            $this->clonedRepoDir
+        );
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+        $this->delTree($this->clonedRepoDir);
+    }
+
     /**
      * Test Execution of command
      *
@@ -55,8 +82,10 @@ class GitCloneTest extends Base
      */
     public function testExecute()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $response = $this->command->execute();
+
+        $this->assertTrue($response->isSuccess());
+        $this->assertTrue(file_exists($this->clonedRepoDir.'/testFile'));
+
     }
 }

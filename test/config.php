@@ -19,6 +19,7 @@
  */
 return array(
     'gitPath' => trim(`which git`),
-    'tempFolder' => '/tmp/reliv/git',
+    'tempFolder' => '/tmp/reliv',
     'tempBareRepo' => '/tests/bare', //Relative to temp dir
+    'workingClone'   => '/tests/working_clone', //Relative to temp dir
 );

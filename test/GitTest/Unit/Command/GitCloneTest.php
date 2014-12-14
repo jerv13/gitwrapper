@@ -59,7 +59,7 @@ class GitCloneTest extends Base
             ->method('getCommand')
             ->will($this->returnValue($config['gitPath']));
 
-        $this->command = new GitClone($gitMock, array($config['tempFolder']));
+        $this->command = new GitClone($gitMock, $config['tempFolder']);
     }
 
     /**
@@ -1060,7 +1060,7 @@ class GitCloneTest extends Base
             ->method('getCommand')
             ->will($this->returnValue($config['gitPath']));
 
-        $this->command = new GitClone($gitMock, array($config['tempFolder'], '.'));
+        $this->command = new GitClone($gitMock, $config['tempFolder'], '.');
 
         $expected = $this->config['gitPath']
             .' clone'

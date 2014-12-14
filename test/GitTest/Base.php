@@ -74,16 +74,28 @@ class Base extends \PHPUnit_Framework_TestCase
         mkdir($tempDir, 0777, true);
     }
 
-    public function initBareGitRepo()
+    public function initGitRepositories()
     {
         $config = $this->getConfig();
-        $tempRepoDir = $config['tempFolder'].$config['tempBareRepo'];
+        $tempBareRepoDir = $config['tempFolder'].$config['tempBareRepo'];
+        $tempWorkingRepo = $config['tempFolder'].$config['workingClone'];
 
-        $this->delTree($tempRepoDir);
-        @mkdir($tempRepoDir, 0777, true);
-        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempRepoDir).' init --bare');
+        $this->delTree($tempBareRepoDir);
+        @mkdir($tempBareRepoDir, 0777, true);
 
-        $this->assertTrue(is_file('ORIG_HEAD'));
+        $this->delTree($tempWorkingRepo);
+        @mkdir($tempWorkingRepo, 0777, true);
+
+
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempBareRepoDir).' init --bare');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' clone -q '.escapeshellarg($tempBareRepoDir).' . 2>&1');
+
+        touch($tempWorkingRepo.'/testFile');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' add testFile');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' commit -m "First Commit"');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' push origin master 2>&1');
+
+        $this->assertTrue(is_file($tempBareRepoDir.'/HEAD'));
     }
 
     protected function delTree($dir) {

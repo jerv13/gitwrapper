@@ -50,7 +50,6 @@ use Git\Exception\MethodNotFoundException;
  * @method Diff     diff()                      Show changes between commits, commit and working tree, etc
  * @method Fetch    fetch()                     Download objects and refs from another repository
  * @method Grep     grep()                      Print lines matching a pattern
- * @method Init     init()                      Create an empty Git repository or reinitialize an existing one
  * @method Log      log()                       Show commit logs
  * @method Merge    merge()                     Join two or more development histories together
  * @method Mv       mv()                        Move or rename a file, a directory, or a symlink
@@ -103,7 +102,6 @@ class Git extends CommandAbstract
         $this->executable = $executable;
     }
 
-
     /**
      * Magic method to get child commands.  See class documentation for the list of current supported commands.
      *
@@ -116,7 +114,7 @@ class Git extends CommandAbstract
     {
         /* Fix for clone reserved word issue */
         if ($name == 'clone') {
-            $name = 'GitClone';
+            return call_user_func(array($this, 'cloneFrom'), $arguments);
         }
 
         $name = ucfirst($name);
@@ -134,6 +132,43 @@ class Git extends CommandAbstract
 
         return new $class($this, $arguments);
     }
+
+    /*
+     * Defined Sub-Commands
+     */
+
+    /**
+     * Clone a repository into a new directory
+     *
+     * @param string $from  URI to Git repo to clone
+     * @param string $toDir Directory to clone to.
+     *
+     * @return GitClone
+     */
+    public function cloneFrom($from, $toDir = null)
+    {
+        return new GitClone($this, $from, $toDir);
+    }
+
+    /**
+     * Create an empty Git repository or reinitialize an existing one
+     *
+     * @param string $path Directory path for new or existing repository
+     *
+     * @return Init
+     */
+    public function init($path = null)
+    {
+        if ($path) {
+            $this->workTree($path);
+        }
+
+        return new Init($this);
+    }
+
+    /*
+     * Command Arguments and Switches
+     */
 
     /**
      * Prints the Git suite version that the git program came from.

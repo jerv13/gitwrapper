@@ -91,25 +91,26 @@ class GitClone extends CommandAbstract
      *          );
      * </code>
      *
-     * @param CommandInterface $parent    Command to wrap
-     * @param array            $arguments Defined array.  See method Definition.
+     * @param CommandInterface $parent Command to wrap
+     * @param string           $from   URI to Git repo to clone
+     * @param string           $toDir  Directory to clone to.
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(CommandInterface $parent, Array $arguments)
+    public function __construct(CommandInterface $parent, $from, $toDir = null)
     {
         parent::__construct($parent);
 
-        if (empty($arguments[0])) {
+        if (empty($from)) {
             throw new InvalidArgumentException(
                 'No source repository found in calling arguments.'
             );
         }
 
-        $this->remote = $arguments[0];
+        $this->remote = $from;
 
-        if (!empty($arguments[1])) {
-            $this->toDir = $arguments[1];
+        if (!empty($toDir)) {
+            $this->toDir = $toDir;
         }
     }
 

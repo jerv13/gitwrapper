@@ -134,6 +134,23 @@ class GitTest extends Base
     }
 
     /**
+     * Test the class magic method command not found.
+     *
+     * @return void
+     *
+     * @covers \Git\Command\Git
+     * @expectedException \Git\Exception\MethodNotFoundException
+     */
+    public function testCallMagicMethodCommandNotFound()
+    {
+        $this->command->notReallyHere();
+    }
+
+    /*
+     * Wrapped Commands
+     */
+
+    /**
      * Test the class magic method with clone reserved word fix.
      *
      * @return void
@@ -147,16 +164,35 @@ class GitTest extends Base
     }
 
     /**
-     * Test the class magic method command not found.
+     * Test wrapped Init command
      *
      * @return void
      *
      * @covers \Git\Command\Git
-     * @expectedException \Git\Exception\MethodNotFoundException
      */
-    public function testCallMagicMethodCommandNotFound()
+    public function testInit()
     {
-        $this->command->notReallyHere();
+        $init = $this->command->init();
+        $this->assertInstanceOf('\Git\Command\Init', $init);
+    }
+
+    /**
+     * Test wrapped Init command with path
+     *
+     * @return void
+     *
+     * @covers \Git\Command\Git
+     */
+    public function testInitWithPath()
+    {
+        $config = $this->getConfig();
+        $init = $this->command->init($config['tempFolder']);
+        $this->assertInstanceOf('\Git\Command\Init', $init);
+
+        $this->assertEquals(
+            $config['tempFolder'],
+            \PHPUnit_Framework_Assert::readAttribute($this->command, 'workTree')
+        );
     }
 
     /*

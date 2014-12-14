@@ -85,7 +85,7 @@ class Git
         $separateGitDirectoryPath = ''
     ) {
         if (!is_dir($newRepoPath)) {
-            $mkdir = @mkdir($newRepoPath);
+            $mkdir = @mkdir($newRepoPath, 0777, true);
 
             if (!$mkdir) {
                 throw new RuntimeException('Unable to create directory at: '.$newRepoPath);
