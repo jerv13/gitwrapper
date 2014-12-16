@@ -6,7 +6,7 @@
  * or in a group.  The best way we have found to ensure this works is to include the below code at the beginning of your
  * Unit test.
  *
- * PHP version 5.3
+ * PHP version 5.4
  *
  * LICENSE: No License yet
  *

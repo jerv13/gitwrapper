@@ -5,7 +5,7 @@
  *
  * This file contains the Configuration for Unit tests
  *
- * PHP version 5.3
+ * PHP version 5.4
  *
  * LICENSE: BSD
  *
