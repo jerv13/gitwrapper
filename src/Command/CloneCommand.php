@@ -34,7 +34,7 @@ use Reliv\Git\Command\Argument\QuietArgument;
 use Reliv\Git\Command\Argument\RecursiveArgument;
 use Reliv\Git\Command\Argument\ReferenceArgument;
 use Reliv\Git\Command\Argument\SeparateGitDirArgument;
-use Reliv\Git\Command\Argument\SharedArgument;
+use Reliv\Git\Command\Argument\SharedObjectArgument;
 use Reliv\Git\Command\Argument\SingleBranchArgument;
 use Reliv\Git\Command\Argument\TemplateArgument;
 use Reliv\Git\Command\Argument\UploadPackArgument;
@@ -78,7 +78,7 @@ class CloneCommand extends CommandAbstract
     use QuietArgument;
     use LocalArgument;
     use NoHardLinksArgument;
-    use SharedArgument;
+    use SharedObjectArgument;
     use ReferenceArgument;
     use VerboseArgument;
     use NoCheckoutArgument;

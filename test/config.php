@@ -22,4 +22,5 @@ return array(
     'tempFolder' => '/tmp/reliv',
     'tempBareRepo' => '/tests/bare', //Relative to temp dir
     'workingClone'   => '/tests/working_clone', //Relative to temp dir
+    'outOfDateClone'   => '/tests/out_of_date_clone', //Relative to temp dir
 );

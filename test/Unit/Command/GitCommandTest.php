@@ -194,328 +194,39 @@ class GitTest extends Base
     }
 
     /**
-     * Test GitDir
+     * Test wrapped Fetch command
      *
      * @return void
      *
      * @covers \Reliv\Git\Command\GitCommand
      */
-    public function testGitDir()
+    public function testFetch()
     {
-        $config = $this->getConfig();
+        $fetch = $this->command->fetch();
+        $this->assertInstanceOf('\Reliv\Git\Command\FetchCommand', $fetch);
+    }
 
-        $this->command->gitDir($config['tempFolder']);
+    /**
+     * Test wrapped Fetch Command with Repo and Refspec
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\GitCommand
+     */
+    public function testFetchWithRepoAndRefspec()
+    {
+        $fetch = $this->command->fetch('myRepo', 'refs/heads/*:refs/remotes/origin/*');
+        $this->assertInstanceOf('\Reliv\Git\Command\FetchCommand', $fetch);
+
         $this->assertEquals(
-            $config['tempFolder'],
-            \PHPUnit_Framework_Assert::readAttribute($this->command, 'gitDir')
+            'myRepo',
+            \PHPUnit_Framework_Assert::readAttribute($fetch, 'repositoryOrGroup')
         );
-    }
 
-    /**
-     * Test GitDir Empty
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testGitDirEmptyString()
-    {
-        $config = $this->getConfig();
-
-        $this->command->gitDir($config['tempFolder'])->gitDir('');
-        $this->assertEmpty(\PHPUnit_Framework_Assert::readAttribute($this->command, 'gitDir'));
-    }
-
-    /**
-     * Test GitDir Invalid Parameter
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     * @expectedException \Reliv\Git\Exception\DirectoryNotFoundException
-     */
-    public function testGitDirInvalid()
-    {
-        $this->command->gitDir('/not-a-folder-for-git');
-    }
-
-    /*
-     *  workTree Property
-     */
-
-    /**
-     * Test WorkTree
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testWorkTree()
-    {
-        $config = $this->getConfig();
-
-        $this->command->workTree($config['tempFolder']);
         $this->assertEquals(
-            $config['tempFolder'],
-            \PHPUnit_Framework_Assert::readAttribute($this->command, 'workTree')
+            'refs/heads/*:refs/remotes/origin/*',
+            \PHPUnit_Framework_Assert::readAttribute($fetch, 'refspec')
         );
-    }
-
-    /**
-     * Test WorkTree Empty
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testWorkTreeEmptyString()
-    {
-        $config = $this->getConfig();
-
-        $this->command->workTree($config['tempFolder'])->workTree('');
-        $this->assertEmpty(\PHPUnit_Framework_Assert::readAttribute($this->command, 'workTree'));
-    }
-
-    /**
-     * Test WorkTree Invalid Parameter
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     * @expectedException \Reliv\Git\Exception\DirectoryNotFoundException
-     */
-    public function testWorkTreeInvalid()
-    {
-        $this->command->workTree('/not-a-folder-for-git');
-    }
-
-    /*
-     *  Namespace Property
-     */
-
-    /**
-     * Test setNamespace
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testSetNamespace()
-    {
-        $namespace = 'someNameSpace';
-
-        $this->command->setNamespace($namespace);
-        $this->assertEquals(
-            $namespace,
-            \PHPUnit_Framework_Assert::readAttribute($this->command, 'namespace')
-        );
-    }
-
-    /**
-     * Test setNamespace False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testSetNamespaceEmpty()
-    {
-        $this->command->setNamespace('someNamespace')->setNamespace(false);
-        $this->assertEmpty(\PHPUnit_Framework_Assert::readAttribute($this->command, 'namespace'));
-    }
-
-    /**
-     * Test setNamespace Invalid Parameter
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     * @expectedException \Reliv\Git\Exception\InvalidArgumentException
-     */
-    public function testSetNamespaceInvalid()
-    {
-        $this->command->setNamespace(array('invalid'));
-    }
-
-    /*
-     *  Bare Property
-     */
-
-    /**
-     * Test Bare
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testBare()
-    {
-        $this->command->bare();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->command, 'bare'));
-    }
-
-    /**
-     * Test Bare False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testBareFalse()
-    {
-        $this->command->bare()->bare();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->command, 'bare'));
-    }
-
-    /*
-     *  NoReplaceObjects Property
-     */
-
-    /**
-     * Test NoReplaceObjects
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testNoReplaceObjects()
-    {
-        $this->command->noReplaceObjects();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->command, 'noReplaceObjects'));
-    }
-
-    /**
-     * Test NoReplaceObjects False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testNoReplaceObjectsFalse()
-    {
-        $this->command->noReplaceObjects()->noReplaceObjects();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->command, 'noReplaceObjects'));
-    }
-
-    /*
-     *  LiteralPathspecs Property
-     */
-
-    /**
-     * Test LiteralPathspecs
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testLiteralPathspecs()
-    {
-        $this->command->literalPathspecs();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->command, 'literalPathspecs'));
-    }
-
-    /**
-     * Test LiteralPathspecs False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testLiteralPathspecsFalse()
-    {
-        $this->command->literalPathspecs()->literalPathspecs();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->command, 'literalPathspecs'));
-    }
-
-
-    /*
-     *  GlobPathspecs Property
-     */
-
-    /**
-     * Test GlobPathspecs
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testGlobPathspecs()
-    {
-        $this->command->globPathspecs();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->command, 'globPathspecs'));
-    }
-
-    /**
-     * Test GlobPathspecs False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testGlobPathspecsFalse()
-    {
-        $this->command->globPathspecs()->globPathspecs();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->command, 'globPathspecs'));
-    }
-
-    /*
-     *  NoGlobPathspecs Property
-     */
-
-    /**
-     * Test NoGlobPathspecs
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testNoGlobPathspecs()
-    {
-        $this->command->noGlobPathspecs();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->command, 'noGlobPathspecs'));
-    }
-
-    /**
-     * Test NoGlobPathspecs False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testNoGlobPathspecsFalse()
-    {
-        $this->command->noGlobPathspecs()->noGlobPathspecs();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->command, 'noGlobPathspecs'));
-    }
-
-    /*
-     *  ICasePathspecs Property
-     */
-
-    /**
-     * Test ICasePathspecs
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testICasePathspecs()
-    {
-        $this->command->iCasePathspecs();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->command, 'iCasePathspecs'));
-    }
-
-    /**
-     * Test ICasePathspecs False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\GitCommand
-     */
-    public function testICasePathspecsFalse()
-    {
-        $this->command->iCasePathspecs()->iCasePathspecs();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->command, 'iCasePathspecs'));
     }
 
     /**
@@ -570,7 +281,6 @@ class GitTest extends Base
             .' --no-replace-objects'
             .' --literal-pathspecs'
             .' --glob-pathspecs'
-            .' --noglob-pathspecs'
             .' --icase-pathspecs';
 
         $result = $this->command
@@ -590,7 +300,6 @@ class GitTest extends Base
             ->noReplaceObjects()
             ->literalPathspecs()
             ->globPathspecs()
-            ->noGlobPathspecs()
             ->iCasePathspecs()
             ->getCommand();
 
@@ -632,6 +341,27 @@ class GitTest extends Base
 
         $result = $this->command
             ->noPager()
+            ->getCommand();
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * Test the get command with no pager
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\GitCommand
+     */
+    public function testGetCommandWithNoGlobPathSpecs()
+    {
+        $config = $this->getConfig();
+        $gitPath = $config['gitPath'];
+
+        $expected = $gitPath.' --noglob-pathspecs';
+
+        $result = $this->command
+            ->noGlobPathspecs()
             ->getCommand();
 
         $this->assertEquals($expected, $result);

@@ -67,17 +67,37 @@ class Base extends MainBase
         $this->command = new $className($this->gitCommandWrapper);
     }
 
+    public function initGitRepositories()
+    {
+        $config = $this->getConfig();
+        $tempBareRepoDir = $config['tempFolder'].$config['tempBareRepo'];
+        $tempWorkingRepo = $config['tempFolder'].$config['workingClone'];
+        $outOfDateRepo   = $config['tempFolder'].$config['outOfDateClone'];
 
-    protected function delTree($dir) {
-        if (!is_dir($dir)) {
-            return true;
-        }
+        $this->delTree($tempBareRepoDir);
+        @mkdir($tempBareRepoDir, 0777, true);
 
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach ($files as $file) {
-            (is_dir("$dir/$file")) ? $this->delTree("$dir/$file") : unlink("$dir/$file");
-        }
+        $this->delTree($tempWorkingRepo);
+        @mkdir($tempWorkingRepo, 0777, true);
 
-        return rmdir($dir);
+        $this->delTree($outOfDateRepo);
+        @mkdir($outOfDateRepo, 0777, true);
+
+
+        /** Bare Repo */
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempBareRepoDir).' init --bare');
+
+        /** Working Repo */
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' clone -q '.escapeshellarg($tempBareRepoDir).' . 2>&1');
+
+        /** Out of Date Repo */
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($outOfDateRepo).' clone -q '.escapeshellarg($tempBareRepoDir).' . 2>&1');
+
+        touch($tempWorkingRepo.'/testFile');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' add testFile');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' commit -m "First Commit"');
+        shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' push origin master 2>&1');
+
+        $this->assertTrue(is_file($tempBareRepoDir.'/HEAD'));
     }
 }

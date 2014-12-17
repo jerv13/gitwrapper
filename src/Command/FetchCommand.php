@@ -20,6 +20,25 @@
 
 namespace Reliv\Git\Command;
 
+use Reliv\Git\Command\Argument\AllArgument;
+use Reliv\Git\Command\Argument\AppendArgument;
+use Reliv\Git\Command\Argument\DepthArgument;
+use Reliv\Git\Command\Argument\DryRunArgument;
+use Reliv\Git\Command\Argument\ForceArgument;
+use Reliv\Git\Command\Argument\KeepArgument;
+use Reliv\Git\Command\Argument\MultipleArgument;
+use Reliv\Git\Command\Argument\ProgressArgument;
+use Reliv\Git\Command\Argument\PruneArgument;
+use Reliv\Git\Command\Argument\QuietArgument;
+use Reliv\Git\Command\Argument\RecurseSubmodulesArgument;
+use Reliv\Git\Command\Argument\RefMapArgument;
+use Reliv\Git\Command\Argument\TagsArgument;
+use Reliv\Git\Command\Argument\UnshallowArgument;
+use Reliv\Git\Command\Argument\UpdateShallowArgument;
+use Reliv\Git\Command\Argument\UploadPackArgument;
+use Reliv\Git\Command\Argument\VerboseArgument;
+use Reliv\Git\Exception\InvalidArgumentException;
+
 /**
  * Fetch Command
  *
@@ -39,31 +58,51 @@ namespace Reliv\Git\Command;
  */
 class FetchCommand extends CommandAbstract
 {
-    protected $all                      = false;
-    protected $append                   = false;
-    protected $depth                    = null;
-    protected $unshallow                = false;
-    protected $updateShallow            = false;
-    protected $dryRun                   = false;
-    protected $force                    = false;
-    protected $keep                     = false;
-    protected $multiple                 = false;
-    protected $prune                    = false;
-    protected $noTags                   = false;
-    protected $refmap                   = array();
-    protected $tags                     = false;
-    protected $recurseSubmodules        = '';
-    protected $noRecurseSubmodules      = false;
-    protected $recurseSubmodulesDefault = '';
-    protected $updateHeadOk             = false;
-    protected $uploadPack               = '';
-    protected $quiet                    = false;
-    protected $verbose                  = false;
-    protected $progress                 = false;
+    use AllArgument;
+    use AppendArgument;
+    use DepthArgument;
+    use UnshallowArgument;
+    use UpdateShallowArgument;
+    use DryRunArgument;
+    use ForceArgument;
+    use KeepArgument;
+    use MultipleArgument;
+    use PruneArgument;
+    use TagsArgument;
+    use RefMapArgument;
+    use RecurseSubmodulesArgument;
+    use UploadPackArgument;
+    use QuietArgument;
+    use VerboseArgument;
+    use ProgressArgument;
 
-    protected $repository               = '';
-    protected $group                    = '';
-    protected $refspec                  = '';
+    protected $repositoryOrGroup = '';
+    protected $refspec           = '';
+
+    /**
+     * Constructor
+     *
+     * @param CommandInterface $parent            Command to wrap
+     * @param null             $repositoryOrGroup Repository path/url or group name
+     * @param null             $refspec           Refspec.  Do not use when fetching a group.
+     */
+    public function __construct(
+        CommandInterface $parent,
+        $repositoryOrGroup = null,
+        $refspec = null
+    ) {
+        parent::__construct($parent);
+
+        if ($refspec && !$repositoryOrGroup) {
+            throw new InvalidArgumentException(
+                'A repository name or path must be provided when using a refspec.'
+                .' See `git fetch help` for more information'
+            );
+        }
+
+        $this->repositoryOrGroup = $repositoryOrGroup;
+        $this->refspec=$refspec;
+    }
 
     /**
      * Get the command string to be used by the CLI
@@ -72,16 +111,33 @@ class FetchCommand extends CommandAbstract
      */
     public function getCommand()
     {
-        throw new CommandNotImplementedException('This command has not been implemented yet.');
-    }
+        $cmd = parent::getCommand().' fetch';
+        $cmd .= $this->getAll();
+        $cmd .= $this->getAppend();
+        $cmd .= $this->getDepth();
+        $cmd .= $this->getUnshallow();
+        $cmd .= $this->getUpdateShallow();
+        $cmd .= $this->getDryRun();
+        $cmd .= $this->getForce();
+        $cmd .= $this->getKeep();
+        $cmd .= $this->getMultiple();
+        $cmd .= $this->getPrune();
+        $cmd .= $this->getTags();
+        $cmd .= $this->getRefMap();
+        $cmd .= $this->getRecurseSubmodules();
+        $cmd .= $this->getUploadPack();
+        $cmd .= $this->getQuiet();
+        $cmd .= $this->getVerbose();
+        $cmd .= $this->getProgress();
 
-    /**
-     * Execute the command.  Must return the Command Response object
-     *
-     * @return mixed
-     */
-    public function execute()
-    {
-        throw new CommandNotImplementedException('This command has not been implemented yet.');
+        if (!empty($this->repositoryOrGroup)) {
+            $cmd .= ' '.escapeshellarg($this->repositoryOrGroup);
+        }
+
+        if (!empty($this->repositoryOrGroup) && !empty($this->refspec)) {
+            $cmd .= ' '.escapeshellarg($this->refspec);
+        }
+
+        return $cmd;
     }
 }

@@ -56,9 +56,8 @@ class SharedArgumentTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(in_array('Reliv\Git\Command\Argument\SharedArgument', class_uses($this->argument)));
     }
 
-
     /**
-     * Test Shared
+     * Test Shared Parameter with value
      *
      * @return void
      *
@@ -67,11 +66,52 @@ class SharedArgumentTest extends \PHPUnit_Framework_TestCase
     public function testShared()
     {
         $this->argument->shared();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared'));
+        $this->assertEquals(
+            'group',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
     }
 
     /**
-     * Test Shared False
+     * Test Shared Parameter with value
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\Argument\SharedArgument
+     */
+    public function testSharedWithValue()
+    {
+        $this->argument->shared('all');
+        $this->assertEquals(
+            'all',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
+    }
+
+    /**
+     * Test Shared Parameter with 'all' aliases
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\Argument\SharedArgument
+     */
+    public function testSharedWithAliasForAll()
+    {
+        $this->argument->shared('world');
+        $this->assertEquals(
+            'all',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
+
+        $this->argument->shared('everybody');
+        $this->assertEquals(
+            'all',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
+    }
+
+    /**
+     * Test Shared Parameter False
      *
      * @return void
      *
@@ -79,40 +119,80 @@ class SharedArgumentTest extends \PHPUnit_Framework_TestCase
      */
     public function testSharedFalse()
     {
-        $this->argument->shared()->shared();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared'));
+        $this->argument->shared(false);
+        $this->assertEquals(
+            'umask',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
     }
 
-    /*
-     *  S Alias Property
-     */
-
     /**
-     * Test S
+     * Test Shared Parameter Null
      *
      * @return void
      *
      * @covers \Reliv\Git\Command\Argument\SharedArgument
      */
-    public function testS()
+    public function testSharedNull()
     {
-        $this->argument->s();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared'));
+        $this->argument->shared(null);
+        $this->assertEquals(
+            'group',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
     }
 
     /**
-     * Test S False
+     * Test Shared Parameter True Boolean
      *
      * @return void
      *
      * @covers \Reliv\Git\Command\Argument\SharedArgument
      */
-    public function testSFalse()
+    public function testSharedTrue()
     {
-        $this->argument->s()->s();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared'));
+        $this->argument->shared(true);
+        $this->assertEquals(
+            'group',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
+
+        $this->argument->shared('true');
+        $this->assertEquals(
+            'group',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
     }
 
+    /**
+     * Test Shared Parameter Octal
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\Argument\SharedArgument
+     */
+    public function testSharedOctal()
+    {
+        $this->argument->shared('664');
+        $this->assertEquals(
+            '664',
+            \PHPUnit_Framework_Assert::readAttribute($this->argument, 'shared')
+        );
+    }
+
+    /**
+     * Test Shared Parameter Invalid
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\Argument\SharedArgument
+     * @expectedException \Reliv\Git\Exception\InvalidArgumentException
+     */
+    public function testSharedInvalid()
+    {
+        $this->argument->shared('Invalid');
+    }
+    
     /**
      * Test the getShared method
      *
@@ -122,8 +202,8 @@ class SharedArgumentTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetShared()
     {
-        $expected = ' --shared';
-        $result = $this->argument->shared()->getShared();
+        $expected = ' --shared=\'all\'';
+        $result = $this->argument->shared('all')->getShared();
         $this->assertEquals($expected, $result);
     }
 

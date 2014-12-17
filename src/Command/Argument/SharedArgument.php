@@ -16,7 +16,10 @@
  * @version   GIT: <git_id>
  * @link      https://github.com/reliv
  */
+
 namespace Reliv\Git\Command\Argument;
+
+use Reliv\Git\Exception\InvalidArgumentException;
 
 /**
  * Shared Argument
@@ -37,51 +40,88 @@ namespace Reliv\Git\Command\Argument;
  */
 trait SharedArgument
 {
-    protected $shared = false;
+    protected $shared = 'umask';
 
     /**
-     * When the repository to clone is on the local machine, instead of
-     * using hard links, automatically setup .git/objects/info/alternates
-     * to share the objects with the source repository. The resulting
-     * repository starts out without any object of its own.
+     * Specify that the Git repository is to be shared
+     * amongst several users. This allows users belonging
+     * to the same group to push into that repository.
+     * When specified, the config variable
+     * "core.sharedRepository" is set so that files and
+     * directories under $GIT_DIR are created with the
+     * requested permissions. When not specified, Git
+     * will use permissions reported by umask(2).
      *
-     * NOTE: this is a possibly dangerous operation; do not use it unless
-     * you understand what it does. If you clone your repository using
-     * this option and then delete branches (or use any other Git command
-     * that makes any existing commit unreferenced) in the source
-     * repository, some objects may become unreferenced (or dangling).
-     * These objects may be removed by normal Git operations (such as git
-     * commit) which automatically call git gc --auto. (See git-gc(1).) If
-     * these objects are removed and were referenced by the cloned
-     * repository, then the cloned repository will become corrupt.
+     * The option can have the following values, defaulting
+     * to group if no value is given:
+     *     umask (or false)            : Use permissions reported by umask(2).
+     *                                   The default, when --shared is not specified.
+     *     group (or true)             : Make the repository group-writable,
+     *                                   (and g+sx, since the git group may be not
+     *                                   the primary group of all users). This is used
+     *                                   to loosen the permissions of an otherwise safe
+     *                                   umask(2) value. Note that the umask still
+     *                                   applies to the other permission bits (e.g.
+     *                                   if umask is 0022, using group will not remove
+     *                                   read privileges from other (non-group) users).
+     *                                   See 0xxx for how to exactly specify the
+     *                                   repository permissions.
+     *     all (or world or everybody) : Same as group, but make the repository readable
+     *                                   by all users.
+     *     0xxx                        : 0xxx is an octal number and each file will have
+     *                                   mode 0xxx. 0xxx will override users' umask(2)
+     *                                   value (and not only loosen permissions as group
+     *                                   and all does). 0640 will create a repository
+     *                                   which is group-readable, but not group-writable
+     *                                   or accessible to others. 0660 will create a
+     *                                   repo that is readable and writable to the
+     *                                   current user and group, but inaccessible to
+     *                                   others.
      *
-     * Note that running git repack without the -l option in a repository
-     * cloned with -s will copy objects from the source repository into a
-     * pack in the cloned repository, removing the disk space savings of
-     * clone -s. It is safe, however, to run git gc, which uses the -l
-     * option by default.
+     * By default, the configuration flag
+     * receive.denyNonFastForwards is enabled in shared
+     * repositories, so that you cannot force a non
+     * fast-forwarding push into it.
      *
-     * If you want to break the dependency of a repository cloned with -s
-     * on its source repository, you can simply run git repack -a to copy
-     * all objects from the source repository into a pack in the cloned
-     * repository.
+     * If you provide a directory, the command is run
+     * inside it. If this directory does not exist, it
+     * will be created.
+     *
+     * @param string $value false|true|umask|group|all|world|everybody|0xxx
      *
      * @return $this
+     * @throws InvalidArgumentException
      */
-    public function shared()
+    public function shared($value = 'group')
     {
-        $this->shared = !$this->shared;
+        if (empty($value) && $value !== false) {
+            $value = 'group';
+        } elseif (empty($value) && $value === false) {
+            $value = 'umask';
+        } elseif ($value === true || $value == 'true') {
+            $value = 'group';
+        } elseif ($value == 'world' || $value == 'everybody') {
+            $value = 'all';
+        }
+
+        $allowed = array(
+            'true',
+            'false',
+            'umask',
+            'group',
+            'all',
+            'world',
+            'everybody'
+        );
+
+        if (!is_numeric($value) && !in_array($value, $allowed)) {
+            throw new InvalidArgumentException(
+                'Invalid shared property.  Allowed: '.implode(', ', $allowed).', 0xxx'
+            );
+        }
+
+        $this->shared = $value;
         return $this;
-    }
-
-    /**
-     * Alias of Shared
-     *
-     * @return $this
-     */
-    public function s()
-    {
-        return $this->shared();
     }
 
     /**
@@ -93,8 +133,8 @@ trait SharedArgument
     {
         $cmd = '';
 
-        if ($this->shared) {
-            $cmd .= ' --shared';
+        if ($this->shared !== 'umask') {
+            $cmd .= ' --shared='.escapeshellarg($this->shared);
         }
 
         return $cmd;

@@ -45,6 +45,30 @@ class StatusCommandTest extends Base
 {
     /** @var \Reliv\Git\Command\StatusCommand */
     protected $command;
+
+    protected $currentDir;
+
+    public function setup()
+    {
+        parent::setup();
+
+        $this->initTempDir();
+        $this->initGitRepositories();
+
+        $config = $this->getConfig();
+        $workingClone   = $config['tempFolder'].$config['workingClone'];
+
+        $this->currentDir = getcwd();
+        chdir($workingClone);
+        touch('myTestFile');
+    }
+
+    public function tearDown()
+    {
+        unlink('myTestFile');
+        chdir($this->currentDir);
+    }
+
     /**
      * Test Execution of command
      *
@@ -54,8 +78,12 @@ class StatusCommandTest extends Base
      */
     public function testExecute()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $response = $this->command->porcelain()->execute();
+
+        $this->assertTrue($response->isSuccess());
+        $this->assertEquals(
+            '?? myTestFile',
+            $response->getMessage()[0]
         );
     }
 }

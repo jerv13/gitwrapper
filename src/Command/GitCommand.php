@@ -20,16 +20,23 @@
 
 namespace Reliv\Git\Command;
 
+use Reliv\Git\Command\Argument\BareArgument;
 use Reliv\Git\Command\Argument\CArgument;
 use Reliv\Git\Command\Argument\ExecPathArgument;
+use Reliv\Git\Command\Argument\GitDirArgument;
+use Reliv\Git\Command\Argument\GlobPathspecsArgument;
 use Reliv\Git\Command\Argument\HelpArgument;
 use Reliv\Git\Command\Argument\HtmlPathArgument;
+use Reliv\Git\Command\Argument\ICasePathspecsArgument;
 use Reliv\Git\Command\Argument\InfoPathArgument;
+use Reliv\Git\Command\Argument\LiteralPathspecsArgument;
 use Reliv\Git\Command\Argument\ManPathArgument;
+use Reliv\Git\Command\Argument\NamespaceArgument;
+use Reliv\Git\Command\Argument\NoReplaceObjectsArgument;
 use Reliv\Git\Command\Argument\PaginateArgument;
 use Reliv\Git\Command\Argument\RunInPathArgument;
 use Reliv\Git\Command\Argument\VersionArgument;
-use Reliv\Git\Exception\DirectoryNotFoundException;
+use Reliv\Git\Command\Argument\WorkTreeArgument;
 use Reliv\Git\Exception\InvalidArgumentException;
 use Reliv\Git\Exception\MethodNotFoundException;
 
@@ -57,7 +64,6 @@ use Reliv\Git\Exception\MethodNotFoundException;
  * @method CloneCommand    clone($from, $toDir = null) Clone a repository into a new directory
  * @method CommitCommand   commit()                    Record changes to the repository
  * @method DiffCommand     diff()                      Show changes between commits, commit and working tree, etc
- * @method FetchCommand    fetch()                     Download objects and refs from another repository
  * @method GrepCommand     grep()                      Print lines matching a pattern
  * @method LogCommand      log()                       Show commit logs
  * @method MergeCommand    merge()                     Join two or more development histories together
@@ -82,27 +88,16 @@ class GitCommand extends CommandAbstract
     use ManPathArgument;
     use InfoPathArgument;
     use PaginateArgument;
+    use GitDirArgument;
+    use WorkTreeArgument;
+    use NamespaceArgument;
+    use BareArgument;
+    use NoReplaceObjectsArgument;
+    use LiteralPathspecsArgument;
+    use GlobPathspecsArgument;
+    use ICasePathspecsArgument;
 
     protected $executable;
-
-
-
-
-
-
-
-
-
-    protected $gitDir = '';
-    protected $workTree = '';
-    protected $namespace = '';
-    protected $bare = false;
-    protected $noReplaceObjects = false;
-    protected $literalPathspecs = false;
-    protected $globPathspecs = false;
-    protected $noGlobPathspecs = false;
-    protected $iCasePathspecs = false;
-
 
     /**
      * Constructor
@@ -194,169 +189,24 @@ class GitCommand extends CommandAbstract
         return new StatusCommand($this, $pathspecs);
     }
 
+    /**
+     * Download objects and refs from another repository
+     *
+     * @param string|null $repositoryOrGroup Repository path/url or group name
+     * @param string|null $refspec           Refspec.  Do not use when fetching a group.
+     *
+     * @return FetchCommand
+     */
+    public function fetch(
+        $repositoryOrGroup = null,
+        $refspec = null
+    ) {
+        return new FetchCommand($this, $repositoryOrGroup, $refspec);
+    }
+
     /*
-     * Command Argument and Switches
+     * GetCommand
      */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * Set the path to the repository. This can also be controlled by
-     * setting the GIT_DIR environment variable. It can be an absolute
-     * path or relative path to current working directory.
-     *
-     * @param string $path Path to the git repository
-     *
-     * @return $this
-     */
-    public function gitDir($path)
-    {
-        if (!empty($path) && !is_dir($path)) {
-            throw new DirectoryNotFoundException('No directory found at: '.$path);
-        } elseif (empty($path)) {
-            $path = '';
-        }
-
-        $this->gitDir = $path;
-
-        return $this;
-    }
-
-    /**
-     * Set the path to the working tree. It can be an absolute path or a
-     * path relative to the current working directory. This can also be
-     * controlled by setting the GIT_WORK_TREE environment variable and
-     * the core.worktree configuration variable (see core.worktree in git-
-     * config(1) for a more detailed discussion).
-     *
-     * @param string $path Path the git work tree
-     *
-     * @return $this
-     */
-    public function workTree($path)
-    {
-        if (!empty($path) && !is_dir($path)) {
-            throw new DirectoryNotFoundException('No directory found at: '.$path);
-        } elseif (empty($path)) {
-            $path = '';
-        }
-
-        $this->workTree = $path;
-
-        return $this;
-    }
-
-    /**
-     * Set the Git namespace. See gitnamespaces(7) for more details.
-     * Equivalent to setting the GIT_NAMESPACE environment variable.
-     *
-     * @param string $namespace Namespace
-     *
-     * @return $this
-     */
-    public function setNamespace($namespace)
-    {
-        if (!empty($namespace) && !is_string($namespace)) {
-            throw new InvalidArgumentException('Namespace must be passed in as a string');
-        }
-
-        $this->namespace = $namespace;
-
-        return $this;
-    }
-
-    /**
-     * Treat the repository as a bare repository.
-     *
-     * @return $this
-     */
-    public function bare()
-    {
-        $this->bare = !$this->bare;
-
-        return $this;
-    }
-
-    /**
-     * Do not use replacement refs to replace Git objects.
-     *
-     * @return $this
-     */
-    public function noReplaceObjects()
-    {
-        $this->noReplaceObjects = !$this->noReplaceObjects;
-        return $this;
-    }
-
-    /**
-     * Treat pathspecs literally (i.e. no globbing, no pathspec magic).
-     * This is equivalent to setting the GIT_LITERAL_PATHSPECS environment
-     * variable to 1.
-     *
-     * @return $this
-     */
-    public function literalPathspecs()
-    {
-        $this->literalPathspecs = !$this->literalPathspecs;
-        return $this;
-    }
-
-    /**
-     * Add "glob" magic to all pathspec. This is equivalent to setting the
-     * GIT_GLOB_PATHSPECS environment variable to 1. Disabling globbing on
-     * individual pathspecs can be done using pathspec magic ":(literal)"
-     *
-     * @return $this
-     */
-    public function globPathspecs()
-    {
-        $this->globPathspecs = !$this->globPathspecs;
-        return $this;
-    }
-
-    /**
-     * Add "literal" magic to all pathspec. This is equivalent to setting
-     * the GIT_NOGLOB_PATHSPECS environment variable to 1. Enabling
-     * globbing on individual pathspecs can be done using pathspec magic
-     * ":(glob)"
-     *
-     * @return $this
-     */
-    public function noGlobPathspecs()
-    {
-        $this->noGlobPathspecs = !$this->noGlobPathspecs;
-        return $this;
-    }
-
-    /**
-     * Add "icase" magic to all pathspec. This is equivalent to setting
-     * the GIT_ICASE_PATHSPECS environment variable to 1.
-     *
-     * @return $this
-     */
-    public function iCasePathspecs()
-    {
-        $this->iCasePathspecs = !$this->iCasePathspecs;
-        return $this;
-    }
 
     /**
      * Get the command string to be used by the CLI
@@ -375,58 +225,14 @@ class GitCommand extends CommandAbstract
         $cmd .= $this->getManPath();
         $cmd .= $this->getInfoPath();
         $cmd .= $this->getPaginate();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        if (!empty($this->gitDir)) {
-            $cmd .= ' --git-dir='.escapeshellarg($this->gitDir);
-        }
-
-        if (!empty($this->workTree)) {
-            $cmd .= ' --work-tree='.escapeshellarg($this->workTree);
-        }
-
-        if (!empty($this->namespace)) {
-            $cmd .= ' --namespace='.escapeshellarg($this->namespace);
-        }
-
-        if ($this->bare) {
-            $cmd .= ' --bare';
-        }
-
-        if ($this->noReplaceObjects) {
-            $cmd .= ' --no-replace-objects';
-        }
-
-        if ($this->literalPathspecs) {
-            $cmd .= ' --literal-pathspecs';
-        }
-
-        if ($this->globPathspecs) {
-            $cmd .= ' --glob-pathspecs';
-        }
-
-        if ($this->noGlobPathspecs) {
-            $cmd .= ' --noglob-pathspecs';
-        }
-
-        if ($this->iCasePathspecs) {
-            $cmd .= ' --icase-pathspecs';
-        }
+        $cmd .= $this->getGitDir();
+        $cmd .= $this->getWorkTree();
+        $cmd .= $this->getNamespace();
+        $cmd .= $this->getBare();
+        $cmd .= $this->getNoReplaceObjects();
+        $cmd .= $this->getLiteralPathspecs();
+        $cmd .= $this->getGlobPathspecs();
+        $cmd .= $this->getICasePathspecs();
 
         return $cmd;
     }

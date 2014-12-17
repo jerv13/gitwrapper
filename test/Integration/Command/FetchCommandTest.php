@@ -19,8 +19,6 @@
 
 namespace Reliv\GitTest\Integration\Command;
 
-use Reliv\Git\Command\FetchCommand;
-
 require_once __DIR__ . '/Base.php';
 
 /**
@@ -46,6 +44,27 @@ class FetchCommandTest extends Base
     /** @var \Reliv\Git\Command\FetchCommand */
     protected $command;
 
+    protected $currentDir;
+
+    public function setup()
+    {
+        parent::setup();
+
+        $this->initTempDir();
+        $this->initGitRepositories();
+
+        $config = $this->getConfig();
+        $outOfDateRepo   = $config['tempFolder'].$config['outOfDateClone'];
+
+        $this->currentDir = getcwd();
+        chdir($outOfDateRepo);
+    }
+
+    public function tearDown()
+    {
+        chdir($this->currentDir);
+    }
+
     /**
      * Test Execution of command
      *
@@ -55,8 +74,12 @@ class FetchCommandTest extends Base
      */
     public function testExecute()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $response = $this->command->all()->execute();
+
+        $this->assertTrue($response->isSuccess());
+        $this->assertEquals(
+            'Fetching origin',
+            $response->getMessage()[0]
         );
     }
 }
