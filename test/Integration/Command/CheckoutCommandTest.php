@@ -20,6 +20,7 @@
 namespace Reliv\GitTest\Integration\Command;
 
 use Reliv\Git\Command\CheckoutCommand;
+use Reliv\Git\Command\GitCommand;
 
 require_once __DIR__ . '/Base.php';
 
@@ -46,6 +47,34 @@ class CheckoutCommandTest extends Base
     /** @var \Reliv\Git\Command\CheckoutCommand */
     protected $command;
 
+    protected $currentDir;
+
+    public function setup()
+    {
+        $config = $this->getConfig();
+
+        $this->gitCommandWrapper = new GitCommand($config['gitPath']);
+
+        $this->command = new CheckoutCommand($this->gitCommandWrapper, 'master');
+
+        $this->initTempDir();
+        $this->initGitRepositories();
+
+        $config = $this->getConfig();
+        $workingClone   = $config['tempFolder'].$config['workingClone'];
+
+        $this->currentDir = getcwd();
+        chdir($workingClone);
+    }
+
+    /**
+     * Tear Down
+     */
+    public function tearDown()
+    {
+        chdir($this->currentDir);
+    }
+
     /**
      * Test Execution of command
      *
@@ -55,8 +84,8 @@ class CheckoutCommandTest extends Base
      */
     public function testExecute()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $result = $this->command->b('checkoutTestBranch')->execute();
+        $this->assertTrue($result->isSuccess());
+        $this->assertContains('checkoutTestBranch', $result->getMessage()[0]);
     }
 }

@@ -112,7 +112,7 @@ class CloneCommandTest extends Base
     {
         $config = $this->getConfig();
 
-        $expected = $this->config['gitPath']
+        $expected = $config['gitPath']
             .' clone'
             .' '.escapeshellarg($config['tempFolder']);
 

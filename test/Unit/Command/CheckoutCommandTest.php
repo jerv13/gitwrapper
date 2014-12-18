@@ -46,6 +46,21 @@ class CheckoutCommandTest extends Base
     /** @var \Reliv\Git\Command\CheckoutCommand */
     protected $command;
 
+    public function setup()
+    {
+        $config = $this->getConfig();
+
+        $gitMock = $this->getMockBuilder('\Reliv\Git\Command\GitCommand')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $gitMock->expects($this->any())
+            ->method('getCommand')
+            ->will($this->returnValue($config['gitPath']));
+
+        $this->command = new CheckoutCommand($gitMock, 'branch');
+    }
+
     /**
      * Test the constructor
      *
@@ -63,20 +78,6 @@ class CheckoutCommandTest extends Base
     }
 
     /**
-     * Test the class default values
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\CheckoutCommand
-     */
-    public function testDefaults()
-    {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
-    }
-
-    /**
      * Test the get command
      *
      * @return void
@@ -85,8 +86,13 @@ class CheckoutCommandTest extends Base
      */
     public function testGetCommand()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
+        $config = $this->getConfig();
+        $expected = $config['gitPath'].' checkout \'branch\'';
+
+        $result = $this->command->getCommand();
+        $this->assertEquals(
+            $expected,
+            $result
         );
     }
 }

@@ -60,6 +60,9 @@ class FetchCommandTest extends Base
         chdir($outOfDateRepo);
     }
 
+    /**
+     * Tear Down
+     */
     public function tearDown()
     {
         chdir($this->currentDir);
