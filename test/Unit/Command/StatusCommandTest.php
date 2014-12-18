@@ -280,7 +280,7 @@ class StatusCommandTest extends Base
 
         $this->command = new StatusCommand($gitMock, $pathspec);
 
-        $expected = $this->config['gitPath'].' status -- \''.$pathspec.'\'';
+        $expected = $config['gitPath'].' status -- \''.$pathspec.'\'';
         $result = $this->command->getCommand();
         $this->assertEquals($expected, $result);
     }
