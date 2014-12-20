@@ -171,7 +171,7 @@ class GitCommand extends CommandAbstract
     public function init($path = null)
     {
         if ($path) {
-            $this->workTree($path);
+            $this->runInPath($path);
         }
 
         return new InitCommand($this);

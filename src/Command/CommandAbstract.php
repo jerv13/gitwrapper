@@ -85,17 +85,39 @@ abstract class CommandAbstract implements CommandInterface
     {
         $response = new CommandResponse();
 
-        $command = $this->getCommand().' 2>&1';
+        $command = $this->getCommand();
 
-        $output = array();
+        $message = '';
         $statusCode = null;
 
-        exec($command, $output, $statusCode);
+        $descriptorspec = array(
+            0 => array("pipe", "r"),
+            1 => array("pipe", "w"),
+            2 => array("pipe", "w")
+        );
 
-        $response->setStatusCode($statusCode);
-        $response->setMessage($output);
+        $process = proc_open($command, $descriptorspec, $pipes);
+
+        if (is_resource($process)) {
+
+            $message = trim(stream_get_contents($pipes[1]));
+            $errors = trim(stream_get_contents($pipes[2]));
+
+            fclose($pipes[0]);
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+
+            $response->setStatusCode(proc_close($process));
+        }
+
+        if (!empty($message)) {
+            $response->setMessage(explode("\n", $message));
+        }
+
+        if (!empty($errors)) {
+            $response->setErrors(explode("\n",$errors));
+        }
 
         return $response;
-
     }
 }

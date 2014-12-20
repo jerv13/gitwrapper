@@ -157,7 +157,7 @@ class GitTest extends Base
 
         $this->assertEquals(
             $config['tempFolder'],
-            \PHPUnit_Framework_Assert::readAttribute($this->command, 'workTree')
+            \PHPUnit_Framework_Assert::readAttribute($this->command, 'runInPath')
         );
     }
 

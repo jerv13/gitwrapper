@@ -86,6 +86,6 @@ class CheckoutCommandTest extends Base
     {
         $result = $this->command->b('checkoutTestBranch')->execute();
         $this->assertTrue($result->isSuccess());
-        $this->assertContains('checkoutTestBranch', $result->getMessage()[0]);
+        $this->assertContains('checkoutTestBranch', $result->getErrors()[0]);
     }
 }

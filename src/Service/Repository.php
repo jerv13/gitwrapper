@@ -70,5 +70,7 @@ class Repository
         if (!empty($pathToWorkTree)) {
             $gitCommandWrapper->workTree($pathToWorkTree);
         }
+
+        $this->gitCommandWrapper = $gitCommandWrapper;
     }
 }

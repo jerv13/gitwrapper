@@ -44,27 +44,20 @@ class CommandResponse
 {
     protected $statusCode = 500;
     protected $message = array();
+    protected $errors  = array();
 
     /**
-     * Get Returned Message
+     * Was the command successful?
      *
-     * @return array
+     * @return bool
      */
-    public function getMessage()
+    public function isSuccess()
     {
-        return $this->message;
-    }
+        if ($this->statusCode === 0) {
+            return true;
+        }
 
-    /**
-     * Set the Returned Message
-     *
-     * @param array $message Message returned from command
-     *
-     * @return void
-     */
-    public function setMessage(Array $message)
-    {
-        $this->message = array_merge($this->message, $message);
+        return false;
     }
 
     /**
@@ -94,16 +87,46 @@ class CommandResponse
     }
 
     /**
-     * Was the command successful?
+     * Get Returned Message
      *
-     * @return bool
+     * @return array
      */
-    public function isSuccess()
+    public function getMessage()
     {
-        if ($this->statusCode === 0) {
-            return true;
-        }
+        return $this->message;
+    }
 
-        return false;
+    /**
+     * Set the Returned Message
+     *
+     * @param array $message Message returned from command
+     *
+     * @return void
+     */
+    public function setMessage(Array $message)
+    {
+        $this->message = array_merge($this->message, $message);
+    }
+
+    /**
+     * Get the error message
+     *
+     * @return array
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Set the error message
+     *
+     * @param array $errors Error message from stream
+     *
+     * @return void
+     */
+    public function setErrors(Array $errors)
+    {
+        $this->errors = array_merge($this->errors, $errors);
     }
 }

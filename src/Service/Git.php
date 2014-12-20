@@ -60,19 +60,20 @@ class Git
      * Create an empty Git repository or reinitialize an existing
      * one
      *
-     * @param string $newRepoPath              Path to new or current repository
-     * @param mixed  $shared                   Specify that the Git repository is to be shared amongst several
-     *                                         users.  Only set this option if you know what you're doing.
-     *                                         Possible values: false|true|umask|group|all|world|everybody|0xxx
-     * @param string $templateDirectory        Specify the directory from which templates will be used.
-     *                                         Only set this option if you know what you're doing.
-     * @param string $separateGitDirectoryPath Instead of initializing the repository as a directory to either
-     *                                         $GIT_DIR or ./.git/, create a text file there containing the path
-     *                                         to the actual repository. This file acts as filesystem-agnostic Git
-     *                                         symbolic link to the repository.
-     *                                         If this is reinitialization, the repository will be moved to the
-     *                                         specified path.
-     *                                         Only set this option if you know what you're doing.
+     * @param string  $newRepoPath              Path to new or current repository
+     * @param boolean $bare                     Create a bare repository.
+     * @param mixed   $shared                   Specify that the Git repository is to be shared amongst several
+     *                                          users.  Only set this option if you know what you're doing.
+     *                                          Possible values: false|true|umask|group|all|world|everybody|0xxx
+     * @param string  $templateDirectory        Specify the directory from which templates will be used.
+     *                                          Only set this option if you know what you're doing.
+     * @param string  $separateGitDirectoryPath Instead of initializing the repository as a directory to either
+     *                                          $GIT_DIR or ./.git/, create a text file there containing the path
+     *                                          to the actual repository. This file acts as filesystem-agnostic Git
+     *                                          symbolic link to the repository.
+     *                                          If this is reinitialization, the repository will be moved to the
+     *                                          specified path.
+     *                                          Only set this option if you know what you're doing.
      *
      * @return Repository
      *
@@ -80,6 +81,7 @@ class Git
      */
     public function initRepository(
         $newRepoPath,
+        $bare = false,
         $shared = 'umask',
         $templateDirectory = '',
         $separateGitDirectoryPath = ''
@@ -92,9 +94,79 @@ class Git
             }
         }
 
-        $init = $this->getCommandWrapper()->runInPath($newRepoPath)->init();
+        $init = $this->getCommandWrapper()->init($newRepoPath)
+            ->shared($shared)
+            ->template($templateDirectory)
+            ->separateGitDir($separateGitDirectoryPath);
 
-        $result = $init->shared($shared)
+        if ($bare) {
+            $init->bare();
+        }
+
+        $result = $init->execute();
+
+        if (!$result->isSuccess()) {
+            throw new RuntimeException(
+                'Unable to initialize repository at: '.$newRepoPath
+                ."\nCommand Line Messages:\n".implode("\n", $result->getMessage())
+            );
+        }
+
+        return new Repository(
+            $newRepoPath,
+            $this->getCommandWrapper(),
+            $separateGitDirectoryPath
+        );
+    }
+
+    /**
+     * Clone a Git repository
+     *
+     * @param string  $from                     Git Repository to clone
+     * @param string  $newRepoPath              Path to new or current repository
+     * @param string  $branch                   Branch to clone. Pass null to clone all branches (default)
+     * @param integer $depth                    Depth to clone.  Pass 0 to make a complete clone.
+     * @param boolean $bare                     Create a bare repository.
+     * @param string  $templateDirectory        Specify the directory from which templates will be used.
+     *                                          Only set this option if you know what you're doing.
+     * @param string  $separateGitDirectoryPath Instead of initializing the repository as a directory to either
+     *                                          $GIT_DIR or ./.git/, create a text file there containing the path
+     *                                          to the actual repository. This file acts as filesystem-agnostic Git
+     *                                          symbolic link to the repository.
+     *                                          If this is reinitialization, the repository will be moved to the
+     *                                          specified path.
+     *                                          Only set this option if you know what you're doing.
+     *
+     * @return Repository
+     *
+     * @throws RuntimeException
+     */
+    public function cloneRepository(
+        $from,
+        $newRepoPath,
+        $branch = null,
+        $depth = 0,
+        $bare = false,
+        $templateDirectory = '',
+        $separateGitDirectoryPath = ''
+    ) {
+        if (!is_dir($newRepoPath)) {
+            $mkdir = @mkdir($newRepoPath, 0777, true);
+
+            if (!$mkdir) {
+                throw new RuntimeException('Unable to create directory at: '.$newRepoPath);
+            }
+        }
+
+        $clone = $this->getCommandWrapper()->clone($from, $newRepoPath);
+
+        if ($bare) {
+            $clone->bare();
+        }
+
+        $result = $clone
+            ->branch($branch)
+            ->depth($depth)
             ->template($templateDirectory)
             ->separateGitDir($separateGitDirectoryPath)
             ->execute();
@@ -105,7 +177,6 @@ class Git
                 ."\nCommand Line Messages:\n".implode("\n", $result->getMessage())
             );
         }
-
 
         return new Repository(
             $newRepoPath,
