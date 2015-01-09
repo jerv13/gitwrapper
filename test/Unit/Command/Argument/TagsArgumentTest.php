@@ -67,7 +67,6 @@ class TagsArgumentTest extends \PHPUnit_Framework_TestCase
     {
         $this->argument->Tags();
         $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
     }
 
     /**
@@ -81,7 +80,6 @@ class TagsArgumentTest extends \PHPUnit_Framework_TestCase
     {
         $this->argument->tags()->tags();
         $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
     }
 
     /*
@@ -99,7 +97,6 @@ class TagsArgumentTest extends \PHPUnit_Framework_TestCase
     {
         $this->argument->t();
         $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
     }
 
     /**
@@ -113,71 +110,6 @@ class TagsArgumentTest extends \PHPUnit_Framework_TestCase
     {
         $this->argument->t()->t();
         $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
-    }
-
-    /*
-     *  No Tags Argument
-     */
-
-    /**
-     * Test Tags
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\Argument\TagsArgument
-     */
-    public function testNoTags()
-    {
-        $this->argument->noTags();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-    }
-
-    /**
-     * Test Tags False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\Argument\TagsArgument
-     */
-    public function testNoTagsFalse()
-    {
-        $this->argument->noTags()->noTags();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-    }
-
-    /*
-     *  N Alias
-     */
-
-    /**
-     * Test N Alias
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\Argument\TagsArgument
-     */
-    public function testN()
-    {
-        $this->argument->n();
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
-    }
-
-    /**
-     * Test N Alias False
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\Argument\TagsArgument
-     */
-    public function testNFalse()
-    {
-        $this->argument->n()->n();
-        $this->assertFalse(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'noTags'));
-        $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'tags'));
     }
 
     /**
@@ -191,20 +123,6 @@ class TagsArgumentTest extends \PHPUnit_Framework_TestCase
     {
         $expected = ' --tags';
         $result = $this->argument->tags()->gettags();
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     * Test the getTags method with No Tags set
-     *
-     * @return void
-     *
-     * @covers \Reliv\Git\Command\Argument\TagsArgument
-     */
-    public function testGetTagsWithNoTagsSet()
-    {
-        $expected = ' --no-tags';
-        $result = $this->argument->notags()->getTags();
         $this->assertEquals($expected, $result);
     }
 

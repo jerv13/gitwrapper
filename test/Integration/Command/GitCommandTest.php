@@ -22,8 +22,9 @@ namespace Reliv\GitTest\Integration\Command;
 use Reliv\Git\Command\AddCommand;
 use Reliv\Git\Command\GitCommand;
 use Reliv\Git\Command\CloneCommand;
+use Reliv\GitTest\Integration\Base;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the Git command

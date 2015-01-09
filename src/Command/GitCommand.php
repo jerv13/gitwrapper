@@ -204,6 +204,25 @@ class GitCommand extends CommandAbstract
         return new FetchCommand($this, $repositoryOrGroup, $refspec);
     }
 
+    /**
+     * List references in a remote repository
+     *
+     * @param null|string $repository The "remote" repository to query. This parameter can be either a URL or
+     *                                the name of a remote (see the GIT URLS and REMOTES sections of
+     *                                git-fetch(1)).
+     * @param null|string $refs       When unspecified, all references, after filtering done with --heads
+     *                                and --tags, are shown. When <refs>... are specified, only
+     *                                references matching the given patterns are displayed.
+     *
+     * @return LsRemoteCommand
+     */
+    public function lsRemote(
+        $repository = null,
+        $refs = null
+    ) {
+        return new LsRemoteCommand($this, $repository, $refs);
+    }
+
     /*
      * GetCommand
      */

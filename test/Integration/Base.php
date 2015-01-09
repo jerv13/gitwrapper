@@ -18,12 +18,12 @@
  * @link      https://github.com/reliv
  */
 
-namespace Reliv\GitTest\Integration\Command;
+namespace Reliv\GitTest\Integration;
 
 use Reliv\GitTest\MainBase;
 use Reliv\Git\Command\GitCommand;
 
-require_once __DIR__ . '/../../MainBase.php';
+require_once __DIR__ . '/../MainBase.php';
 
 /**
  * Tag Command

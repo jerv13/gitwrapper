@@ -41,10 +41,7 @@ use Reliv\Git\Exception\RuntimeException;
  */
 class Git
 {
-    /**
-     * @var \Reliv\Git\Command\GitCommand
-     */
-    protected $gitCommandWrapper;
+    protected $executable;
 
     /**
      * Constructor
@@ -53,7 +50,7 @@ class Git
      */
     public function __construct($executable)
     {
-        $this->gitCommandWrapper = new GitCommandWrapper($executable);
+        $this->executable = $executable;
     }
 
     /**
@@ -94,10 +91,11 @@ class Git
             }
         }
 
-        $init = $this->getCommandWrapper()->init($newRepoPath)
+        $gitCommandWrapper = $this->getCommandWrapper($newRepoPath, $separateGitDirectoryPath);
+
+        $init = $gitCommandWrapper->init($newRepoPath)
             ->shared($shared)
-            ->template($templateDirectory)
-            ->separateGitDir($separateGitDirectoryPath);
+            ->template($templateDirectory);
 
         if ($bare) {
             $init->bare();
@@ -114,8 +112,7 @@ class Git
 
         return new Repository(
             $newRepoPath,
-            $this->getCommandWrapper(),
-            $separateGitDirectoryPath
+            $gitCommandWrapper
         );
     }
 
@@ -158,7 +155,9 @@ class Git
             }
         }
 
-        $clone = $this->getCommandWrapper()->clone($from, $newRepoPath);
+        $gitCommandWrapper = $this->getCommandWrapper($newRepoPath, $separateGitDirectoryPath);
+
+        $clone = $gitCommandWrapper->clone($from);
 
         if ($bare) {
             $clone->bare();
@@ -168,7 +167,6 @@ class Git
             ->branch($branch)
             ->depth($depth)
             ->template($templateDirectory)
-            ->separateGitDir($separateGitDirectoryPath)
             ->execute();
 
         if (!$result->isSuccess()) {
@@ -180,19 +178,36 @@ class Git
 
         return new Repository(
             $newRepoPath,
-            $this->getCommandWrapper(),
-            $separateGitDirectoryPath
+            $gitCommandWrapper
         );
+    }
+
+    public function getRepository(
+        $repositoryPath,
+        $separateGitDirectoryPath = ''
+    ) {
+        if (!empty($separateGitDirectoryPath)) {
+
+        }
     }
 
 
     /**
      * Get the command wrapper for Git
      *
+     * @param string      $repoPath Path to new or existing repository
+     * @param null|string $gitDir   Path to working git directory.  Generally not needed.
+     *
      * @return \Reliv\Git\Command\GitCommand
      */
-    public function getCommandWrapper()
-    {
-        return $this->gitCommandWrapper;
+    public function getCommandWrapper(
+        $repoPath,
+        $gitDir = null
+    ) {
+        $commandWrapper = new GitCommandWrapper($this->executable);
+        $commandWrapper->gitDir($gitDir);
+        $commandWrapper->runInPath($repoPath);
+
+        return $commandWrapper;
     }
 }

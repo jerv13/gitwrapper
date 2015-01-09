@@ -1,8 +1,8 @@
 <?php
 /**
- * Tags Argument
+ * No Tags Argument
  *
- * This file contains the Tags Argument for Commands
+ * This file contains the No Tags Argument for Commands
  *
  * PHP version 5.4
  *
@@ -20,9 +20,9 @@
 namespace Reliv\Git\Command\Argument;
 
 /**
- * Tags Argument
+ * No Tags Argument
  *
- * Tags Argument.
+ * No Tags Argument.
  *
  * PHP version 5.4
  *
@@ -36,34 +36,33 @@ namespace Reliv\Git\Command\Argument;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-trait TagsArgument
+trait NoTagsArgument
 {
-    protected $tags   = false;
+    protected $noTags = false;
 
     /**
-     * Fetch all tags from the remote (i.e., fetch remote tags refs/tags/*
-     * into local tags with the same name), in addition to whatever else
-     * would otherwise be fetched. Using this option alone does not
-     * subject tags to pruning, even if --prune is used (though tags may
-     * be pruned anyway if they are also the destination of an explicit
-     * refspec; see --prune).
+     * By default, tags that point at objects that are downloaded from the
+     * remote repository are fetched and stored locally. This option
+     * disables this automatic tag following. The default behavior for a
+     * remote may be specified with the remote.<name>.tagopt setting. See
+     * git-config(1).
      *
      * @return $this
      */
-    public function tags()
+    public function noTags()
     {
-        $this->tags = !$this->tags;
+        $this->noTags = !$this->noTags;
         return $this;
     }
 
     /**
-     * Alias of Tags
+     * Alias of noTags
      *
      * @return $this
      */
-    public function t()
+    public function n()
     {
-        return $this->tags();
+        return $this->noTags();
     }
 
     /**
@@ -71,12 +70,12 @@ trait TagsArgument
      *
      * @return string
      */
-    public function getTags()
+    public function getNoTags()
     {
         $cmd = '';
 
-        if ($this->tags) {
-            $cmd .= ' --tags';
+        if ($this->noTags) {
+            $cmd .= ' --no-tags';
         }
 
         return $cmd;

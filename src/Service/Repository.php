@@ -20,6 +20,8 @@
 namespace Reliv\Git\Service;
 
 use Reliv\Git\Command\GitCommand as GitCommandWrapper;
+use Reliv\Git\Exception\DetachedHeadException;
+use Reliv\Git\Exception\RuntimeException;
 
 /**
  * Git Repository Service Provider
@@ -42,35 +44,105 @@ class Repository
 {
     /** @var \Reliv\Git\Command\GitCommand */
     protected $gitCommandWrapper;
+    protected $repositoryPath = '';
+
+    protected $cachedRefs = array();
 
     /**
      * Construct the Repository Service
      *
-     * @param string            $repositoryPath       Path to repository
-     * @param GitCommandWrapper $gitCommandWrapper    Git Command Wrapper
-     * @param string            $pathToSeparateGitDir Set the path to the repository.  Only needed if your git
-     *                                                repository directory is not located in the repository directory
-     * @param string            $pathToWorkTree       Set the path to the working tree.  Only needed if the working
-     *                                                tree sits outside the Repository Path.
+     * @param string            $repositoryPath    Path to repository
+     * @param GitCommandWrapper $gitCommandWrapper Git Command Wrapper
      */
     public function __construct(
         $repositoryPath,
-        GitCommandWrapper $gitCommandWrapper,
-        $pathToSeparateGitDir = '',
-        $pathToWorkTree = ''
+        GitCommandWrapper $gitCommandWrapper
     ) {
-        if (is_dir($repositoryPath)) {
-            $gitCommandWrapper->runInPath($repositoryPath);
-        }
-
-        if (!empty($pathToSeparateGitDir)) {
-            $gitCommandWrapper->gitDir($pathToSeparateGitDir);
-        }
-
-        if (!empty($pathToWorkTree)) {
-            $gitCommandWrapper->workTree($pathToWorkTree);
-        }
-
+        $this->repositoryPath = $repositoryPath;
         $this->gitCommandWrapper = $gitCommandWrapper;
+    }
+
+    public function getCurrentBranch()
+    {
+        $refs = $this->getRefs();
+
+        foreach ($refs as $ref => $commit) {
+            if ($commit == $refs['HEAD'] && strpos($ref, 'refs/heads/') !== false) {
+                return str_replace('refs/heads/', '', $ref);
+            }
+        }
+
+        throw new DetachedHeadException(
+            'You are in \'detached HEAD\' state. You can look around, make experimental'."\n"
+            .'changes and commit them, and you can discard any commits you make in this'."\n"
+            .'state without impacting any branches by performing another checkout.'
+        );
+    }
+
+
+    public function getRefs($forceRefresh = false)
+    {
+        if (!$forceRefresh && !empty($this->cachedRefs)) {
+            return $this->cachedRefs;
+        }
+
+        $result = $this->gitCommandWrapper->lsRemote($this->repositoryPath)->execute();
+
+        if (!$result->isSuccess()) {
+            throw new RuntimeException(
+                'Unable to get ref paths.'."\n".implode($result->getMessage())
+            );
+        }
+
+        $raw = $result->getMessage();
+
+        foreach ($raw as $ref) {
+            list($commit, $refSpec) = explode("\t", $ref);
+
+            if (strpos($refSpec, '^{}') !== false) {
+                continue;
+            }
+
+            $this->cachedRefs[$refSpec] = $commit;
+        }
+
+        return $this->cachedRefs;
+    }
+
+    /**
+     * Is a remote repo
+     *
+     * @return bool
+     */
+    public function isRemote()
+    {
+        if (@is_dir($this->repositoryPath)) {
+            return false;
+        }
+
+        $parsed = parse_url($this->repositoryPath);
+
+        if (!empty($parsed['scheme'])
+            && ($parsed['scheme'] == 'https' || $parsed['scheme'] == 'http' || $parsed['scheme'] == 'git')
+        ) {
+            return true;
+        }
+
+        if (preg_match('/@.+:/', $this->repositoryPath)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function inDetachedHead()
+    {
+        try {
+            $this->getCurrentBranch();
+        } catch (DetachedHeadException $e) {
+            return true;
+        }
+
+        return false;
     }
 }

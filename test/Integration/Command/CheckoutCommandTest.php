@@ -21,8 +21,9 @@ namespace Reliv\GitTest\Integration\Command;
 
 use Reliv\Git\Command\CheckoutCommand;
 use Reliv\Git\Command\GitCommand;
+use Reliv\GitTest\Integration\Base;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the Checkout command

@@ -19,7 +19,9 @@
 
 namespace Reliv\GitTest\Service\Git;
 
+use Reliv\Git\Command\GitCommand;
 use Reliv\Git\Service\Git;
+use Reliv\Git\Service\Repository;
 use Reliv\GitTest\Integration\Base;
 
 require_once __DIR__ . '/../Base.php';
@@ -42,12 +44,14 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class GitTest extends Base
+class RepositoryTest extends Base
 {
-    /** @var \Reliv\Git\Service\Git */
-    protected $gitService;
+    /** @var \Reliv\Git\Service\Repository */
+    protected $repository;
 
     protected $tempFolder;
+
+    protected $workingClone;
 
     /**
      * Setup Tests
@@ -57,30 +61,27 @@ class GitTest extends Base
     public function setup()
     {
         $config = $this->getConfig();
-        $this->gitService = new Git($config['gitPath']);
-        $this->tempFolder = $config['tempFolder'];
+        $this->workingClone = $config['tempFolder'].$config['workingClone'];
+
+        $this->initGitRepositories();
+
+        $commandWrapper = new GitCommand($config['gitPath']);
+        $this->repository = new Repository($this->workingClone, $commandWrapper);
     }
 
     /**
-     * Test Init New Repo
+     * Test Is Remote
      *
      * @return void
      */
     public function testInitializeRepository()
     {
-        $testRepoDir = $this->tempFolder.'/integrationGitInitTest';
+        $config = $this->getConfig();
+        $commandWrapper = new GitCommand($config['gitPath']);
+        $this->repository = new Repository('/www/gitTest', $commandWrapper);
 
-        $this->delTree($testRepoDir);
-
-        $this->assertFalse(is_dir($testRepoDir));
-
-        $result = $this->gitService->initRepository($testRepoDir);
-
-        $this->assertTrue(is_dir($testRepoDir));
-
-        $this->assertInstanceOf('\Reliv\Git\Service\Repository', $result);
-
-        $this->delTree($testRepoDir);
+        print $this->repository->inDetachedHead();
+        exit;
     }
 
 }

@@ -1,8 +1,8 @@
 <?php
 /**
- * Tags Argument
+ * ExitCode Argument
  *
- * This file contains the Tags Argument for Commands
+ * This file contains the ExitCode Argument for Commands
  *
  * PHP version 5.4
  *
@@ -20,9 +20,9 @@
 namespace Reliv\Git\Command\Argument;
 
 /**
- * Tags Argument
+ * ExitCode Argument
  *
- * Tags Argument.
+ * ExitCode Argument.
  *
  * PHP version 5.4
  *
@@ -36,34 +36,22 @@ namespace Reliv\Git\Command\Argument;
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-trait TagsArgument
+trait ExitCodeArgument
 {
-    protected $tags   = false;
+    protected $exitCode = false;
 
     /**
-     * Fetch all tags from the remote (i.e., fetch remote tags refs/tags/*
-     * into local tags with the same name), in addition to whatever else
-     * would otherwise be fetched. Using this option alone does not
-     * subject tags to pruning, even if --prune is used (though tags may
-     * be pruned anyway if they are also the destination of an explicit
-     * refspec; see --prune).
+     * Exit with status "2" when no matching refs are found in the remote
+     * repository. Usually the command exits with status "0" to indicate
+     * it successfully talked with the remote repository, whether it found
+     * any matching refs.
      *
      * @return $this
      */
-    public function tags()
+    public function exitCode()
     {
-        $this->tags = !$this->tags;
+        $this->exitCode = !$this->exitCode;
         return $this;
-    }
-
-    /**
-     * Alias of Tags
-     *
-     * @return $this
-     */
-    public function t()
-    {
-        return $this->tags();
     }
 
     /**
@@ -71,12 +59,12 @@ trait TagsArgument
      *
      * @return string
      */
-    public function getTags()
+    public function getExitCode()
     {
         $cmd = '';
 
-        if ($this->tags) {
-            $cmd .= ' --tags';
+        if ($this->exitCode) {
+            $cmd .= ' --exit-code';
         }
 
         return $cmd;
