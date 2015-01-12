@@ -71,6 +71,7 @@ use Reliv\Git\Exception\MethodNotFoundException;
  * @method PullCommand     pull()                      Fetch from and integrate with another repository
  * @method PushCommand     push()                      Update remote refs along with associated objects
  * @method RebaseCommand   rebase()                    Forward-port local commits to the updated upstream head
+ * @method RemoteCommand   remote()                    Manage set of tracked repositories
  * @method ResetCommand    reset()                     Reset current HEAD to the specified state
  * @method RevParseCommand revParse()                  Pick out and massage parameters
  * @method RmCommand       rm()                        Remove files from the working tree and from the index
@@ -221,6 +222,18 @@ class GitCommand extends CommandAbstract
         $refs = null
     ) {
         return new LsRemoteCommand($this, $repository, $refs);
+    }
+
+    /**
+     * Checkout a branch or paths to the working tree
+     *
+     * @param string $branchOrCommit Branch or Commit
+     *
+     * @return CheckoutCommand
+     */
+    public function checkout($branchOrCommit)
+    {
+        return new CheckoutCommand($this, $branchOrCommit);
     }
 
     /*
