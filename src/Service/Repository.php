@@ -158,8 +158,10 @@ class Repository
     }
 
     /**
-     * Clone a repository.  Due to the way clone works, we will emulate clone's behavior but will not use clone
-     * directly.
+     * Clone a repository.
+     *
+     * note: Due to the way clone works and that the repository to be cloned my not be a bare repo,
+     * we will emulate clone's behavior but will not use clone directly.
      *
      * @param string       $path  Path to local directory for new repository
      * @param null|integer $depth Depth to clone.
