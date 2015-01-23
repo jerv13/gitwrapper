@@ -20,6 +20,7 @@
 namespace Reliv\Git\Service;
 
 use Reliv\Git\Command\GitCommand as GitCommandWrapper;
+use Reliv\Git\Exception\BranchNotFoundException;
 use Reliv\Git\Exception\DetachedHeadException;
 use Reliv\Git\Exception\DirectoryNotFoundException;
 use Reliv\Git\Exception\RuntimeException;
@@ -222,7 +223,7 @@ class Repository
      */
     public function getCurrentBranch()
     {
-        $refs = $this->getRefs();
+        $refs = $this->getAllRefs();
 
         foreach ($refs as $ref => $commit) {
             if ($commit == $refs['HEAD'] && strpos($ref, 'refs/heads/') !== false) {
@@ -237,6 +238,82 @@ class Repository
         );
     }
 
+    /**
+     * Get the current checked out commit
+     *
+     * @return mixed
+     */
+    public function getCurrentCommit()
+    {
+        $refs = $this->getAllRefs();
+        return $refs['HEAD'];
+    }
+
+    /**
+     * Get the latest commit.  Provide a branch name to get that branches latest commit hash.
+     *
+     * @param string|null $branch Optional branch name to use for lookup
+     *
+     * @return mixed
+     */
+    public function getLatestCommit($branch = '')
+    {
+        if (empty($branch)) {
+            return $this->getCurrentCommit();
+        }
+
+        $refs = $this->getRef('heads/'.$branch);
+
+        if (empty($refs)) {
+            throw new BranchNotFoundException(
+                'Branch '.$branch.' not found'
+            );
+        }
+
+        return array_pop($refs);
+    }
+
+
+    /**
+     * Get Branches in this repo.
+     *
+     * @return array
+     */
+    public function getBranches()
+    {
+        return $this->getRef('heads/*');
+    }
+
+    /**
+     * Get Tags - Note: is sorted alphabetically.
+     *
+     * @return array
+     */
+    public function getLocalTags()
+    {
+        return $this->getRef('tags/*');
+    }
+
+    /**
+     * Get all refspec that match a supplied pattern.  ie: origin/master
+     *
+     * @param string $refSpec Refspec to search for
+     *
+     * @return array
+     */
+    public function getRef($refSpec)
+    {
+        $refs = $this->getAllRefs();
+
+        $matches = array();
+        foreach($refs as $ref => $commit) {
+            if (fnmatch('*'.$refSpec, $ref)) {
+                $matches[$ref] = $commit;
+            }
+        }
+
+        return $matches;
+    }
 
     /**
      * Get the current refs from the repository.  Will use cached result unless a refresh is requested.
@@ -245,7 +322,7 @@ class Repository
      *
      * @return array
      */
-    public function getRefs($forceRefresh = false)
+    public function getAllRefs($forceRefresh = false)
     {
         if (!$forceRefresh && !empty($this->cachedRefs)) {
             return $this->cachedRefs;
