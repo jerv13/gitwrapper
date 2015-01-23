@@ -185,19 +185,23 @@ class Git
     /**
      * Get a reposigory object
      *
-     * @param string $repositoryPath           Path to repository
-     * @param string $separateGitDirectoryPath Path to Git directory
+     * @param string $repositoryPath       Path to repository
+     * @param string $separateGitDirectory Path to Git directory
      *
-     * @return void
+     * @return Repository
      */
 
     public function getRepository(
         $repositoryPath,
-        $separateGitDirectoryPath = ''
+        $separateGitDirectory = ''
     ) {
-        if (!empty($separateGitDirectoryPath)) {
+        $gitCommandWrapper = $this->getCommandWrapper();
 
+        if (!empty($separateGitDirectory)) {
+            $gitCommandWrapper->gitDir($separateGitDirectory);
         }
+
+        return new Repository($repositoryPath, $gitCommandWrapper);
     }
 
 
@@ -210,12 +214,15 @@ class Git
      * @return \Reliv\Git\Command\GitCommand
      */
     public function getCommandWrapper(
-        $repoPath,
+        $repoPath = null,
         $gitDir = null
     ) {
         $commandWrapper = new GitCommandWrapper($this->executable);
-        $commandWrapper->gitDir($gitDir);
-        $commandWrapper->runInPath($repoPath);
+
+        if ($repoPath && $gitDir) {
+            $commandWrapper->gitDir($gitDir);
+            $commandWrapper->runInPath($repoPath);
+        }
 
         return $commandWrapper;
     }
