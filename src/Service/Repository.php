@@ -62,7 +62,9 @@ class Repository
         $this->repositoryPath = $repositoryPath;
         $this->gitCommandWrapper = $gitCommandWrapper;
 
-        $this->gitCommandWrapper->runInPath($repositoryPath);
+        if (!$this->isRemote()) {
+            $this->gitCommandWrapper->runInPath($repositoryPath);
+        }
     }
 
     /**
