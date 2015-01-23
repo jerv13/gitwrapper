@@ -19,12 +19,10 @@
 
 namespace Reliv\GitTest\Unit\Service\Git;
 
-use Reliv\Git\Service\Git;
 use Reliv\Git\Service\Repository;
-use Reliv\GitTest\Base;
-use Reliv\GitTest\MainBase;
+use Reliv\GitTest\Unit\UnitBase;
 
-require_once __DIR__ . '/../../MainBase.php';
+require_once __DIR__ . '/../UnitBase.php';
 
 /**
  * Test for the Git Service Provider
@@ -44,7 +42,7 @@ require_once __DIR__ . '/../../MainBase.php';
  * @link      https://github.com/reliv
  */
 
-class RepositoryTest extends MainBase
+class RepositoryTest extends UnitBase
 {
     /** @var \Reliv\Git\Service\Repository */
     protected $repository;

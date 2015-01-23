@@ -20,9 +20,9 @@
 namespace Reliv\GitTest\Integration\Command;
 
 use Reliv\Git\Command\ShowCommand;
-use Reliv\GitTest\Integration\Base;
+use Reliv\GitTest\Integration\IntegrationBase;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../IntegrationBase.php';
 
 /**
  * Test for the Show command
@@ -42,7 +42,7 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class ShowCommandTest extends Base
+class ShowCommandTest extends IntegrationBase
 {
     /** @var \Reliv\Git\Command\ShowCommand */
     protected $command;

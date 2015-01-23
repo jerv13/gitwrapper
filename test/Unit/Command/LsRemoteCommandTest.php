@@ -20,8 +20,9 @@
 namespace Reliv\GitTest\Unit\Command;
 
 use Reliv\Git\Command\LsRemoteCommand;
+use Reliv\GitTest\Unit\UnitBase;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../UnitBase.php';
 
 /**
  * Test for the LsRemote command
@@ -41,7 +42,7 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class LsRemoteCommandTest extends Base
+class LsRemoteCommandTest extends UnitBase
 {
     /** @var \Reliv\Git\Command\LsRemoteCommand */
     protected $command;

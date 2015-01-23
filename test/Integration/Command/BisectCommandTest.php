@@ -20,9 +20,9 @@
 namespace Reliv\GitTest\Integration\Command;
 
 use Reliv\Git\Command\BisectCommand;
-use Reliv\GitTest\Integration\Base;
+use Reliv\GitTest\Integration\IntegrationBase;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../IntegrationBase.php';
 
 /**
  * Test for the Bisect command
@@ -42,7 +42,7 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class BisectCommandTest extends Base
+class BisectCommandTest extends IntegrationBase
 {
     /** @var \Reliv\Git\Command\BisectCommand */
     protected $command;

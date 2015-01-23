@@ -42,7 +42,7 @@ require_once __DIR__ . '/../MainBase.php';
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Base extends MainBase
+class IntegrationBase extends MainBase
 {
     protected $command;
 
@@ -125,5 +125,18 @@ class Base extends MainBase
         // @codingStandardsIgnoreEnd
 
         $this->assertTrue(is_file($tempBareRepoDir.'/HEAD'));
+    }
+
+    /**
+     * Initialize the temp directory
+     *
+     * @return void
+     */
+    public function initTempDir()
+    {
+        $config = $this->getConfig();
+        $tempDir = $config['tempFolder'];
+        $this->delTree($tempDir);
+        mkdir($tempDir, 0777, true);
     }
 }

@@ -20,9 +20,9 @@
 namespace Reliv\GitTest\Integration\Command;
 
 use Reliv\Git\Command\PullCommand;
-use Reliv\GitTest\Integration\Base;
+use Reliv\GitTest\Integration\IntegrationBase;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../IntegrationBase.php';
 
 /**
  * Test for the Pull command
@@ -42,7 +42,7 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class PullCommandTest extends Base
+class PullCommandTest extends IntegrationBase
 {
     /** @var \Reliv\Git\Command\PullCommand */
     protected $command;

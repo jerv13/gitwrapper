@@ -80,6 +80,28 @@ class CommandResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the Getter and Setter for errors
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\CommandResponse
+     */
+    public function testSetAndGetErrors()
+    {
+        $message = array(
+            'test1',
+            'test2',
+            'test3'
+        );
+
+        $this->response->setErrors($message);
+
+        $result = $this->response->getErrors();
+
+        $this->assertEquals($message, $result);
+    }
+
+    /**
      * Test the message setter only accepts arrays
      *
      * @return void

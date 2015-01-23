@@ -79,6 +79,9 @@ abstract class CommandAbstract implements CommandInterface
     /**
      * Execute the command.  Must return the Command Response object
      *
+     * Note: This can not be tested via unit tests due to the external system call.  This should get covered in
+     *       integration testing, which is also included in the package.
+     *
      * @return CommandResponse
      */
     public function execute()
@@ -89,13 +92,13 @@ abstract class CommandAbstract implements CommandInterface
 
         $message = '';
 
-        $descriptorspec = array(
+        $descriptorSpec = array(
             0 => array("pipe", "r"),
             1 => array("pipe", "w"),
             2 => array("pipe", "w")
         );
 
-        $process = proc_open($command, $descriptorspec, $pipes);
+        $process = proc_open($command, $descriptorSpec, $pipes);
 
         if (is_resource($process)) {
 

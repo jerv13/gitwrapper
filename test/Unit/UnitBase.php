@@ -18,7 +18,7 @@
  * @link      https://github.com/reliv
  */
 
-namespace Reliv\GitTest\Unit\Command;
+namespace Reliv\GitTest\Unit;
 
 use Reliv\GitTest\MainBase;
 
@@ -41,7 +41,7 @@ require_once __DIR__ . '/../MainBase.php';
  * @version   Release: 1.0
  * @link      https://github.com/reliv
  */
-class Base extends MainBase
+class UnitBase extends MainBase
 {
     protected $command;
 

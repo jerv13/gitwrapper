@@ -19,9 +19,9 @@
 
 namespace Reliv\GitTest\Unit\Command\Argument;
 
-use Reliv\GitTest\Unit\Command\Base;
+use Reliv\GitTest\Unit\UnitBase;
 
-require_once __DIR__ . '/../../Base.php';
+require_once __DIR__ . '/../../UnitBase.php';
 
 
 /**
@@ -42,7 +42,7 @@ require_once __DIR__ . '/../../Base.php';
  * @link      https://github.com/reliv
  */
 
-class RunInPathArgumentTest extends Base
+class RunInPathArgumentTest extends UnitBase
 {
     /** @var \Reliv\Git\Command\Argument\RunInPathArgument */
     protected $argument;

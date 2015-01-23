@@ -22,8 +22,9 @@ namespace Reliv\GitTest\Unit\Command;
 use Reliv\Git\Command\AddCommand;
 use Reliv\Git\Command\GitCommand;
 use Reliv\Git\Command\CloneCommand;
+use Reliv\GitTest\Unit\UnitBase;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../UnitBase.php';
 
 /**
  * Test for the Git command
@@ -43,7 +44,7 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class GitTest extends Base
+class GitTest extends UnitBase
 {
     /** @var \Reliv\Git\Command\GitCommand */
     protected $command;
@@ -181,7 +182,7 @@ class GitTest extends Base
      *
      * @covers \Reliv\Git\Command\GitCommand
      */
-    public function testStatusWithPathspecs()
+    public function testStatusWithPathSpecs()
     {
         $config = $this->getConfig();
         $status = $this->command->status($config['tempFolder']);
@@ -226,6 +227,65 @@ class GitTest extends Base
         $this->assertEquals(
             'refs/heads/*:refs/remotes/origin/*',
             \PHPUnit_Framework_Assert::readAttribute($fetch, 'refspec')
+        );
+    }
+
+    /**
+     * Test wrapped ls-remote command
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\GitCommand
+     */
+    public function testLsRemote()
+    {
+        $init = $this->command->lsRemote();
+        $this->assertInstanceOf('\Reliv\Git\Command\LsRemoteCommand', $init);
+    }
+
+    /**
+     * Test wrapped ls-remote command with params
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\GitCommand
+     */
+    public function testLsRemoteWithParams()
+    {
+        $repo = 'https://someRepo.com/repo.git';
+        $refs = 'remotes/upstream';
+
+        $lsRemote = $this->command->lsRemote($repo, $refs);
+        $this->assertInstanceOf('\Reliv\Git\Command\LsRemoteCommand', $lsRemote);
+
+        $this->assertEquals(
+            $repo,
+            \PHPUnit_Framework_Assert::readAttribute($lsRemote, 'repository')
+        );
+
+        $this->assertEquals(
+            $refs,
+            \PHPUnit_Framework_Assert::readAttribute($lsRemote, 'refs')
+        );
+    }
+
+    /**
+     * Test wrapped ls-remote command with params
+     *
+     * @return void
+     *
+     * @covers \Reliv\Git\Command\GitCommand
+     */
+    public function testCheckout()
+    {
+        $branch = 'origin/master';
+
+        $checkout = $this->command->checkout($branch);
+        $this->assertInstanceOf('\Reliv\Git\Command\CheckoutCommand', $checkout);
+
+        $this->assertEquals(
+            $branch,
+            \PHPUnit_Framework_Assert::readAttribute($checkout, 'branchOrCommit')
         );
     }
 

@@ -20,9 +20,9 @@
 namespace Reliv\GitTest\Integration\Command;
 
 use Reliv\Git\Command\CommitCommand;
-use Reliv\GitTest\Integration\Base;
+use Reliv\GitTest\Integration\IntegrationBase;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../IntegrationBase.php';
 
 /**
  * Test for the Commit command
@@ -42,7 +42,7 @@ require_once __DIR__ . '/../Base.php';
  * @link      https://github.com/reliv
  */
 
-class CommitCommandTest extends Base
+class CommitCommandTest extends IntegrationBase
 {
     /** @var \Reliv\Git\Command\CommitCommand */
     protected $command;
