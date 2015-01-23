@@ -139,5 +139,4 @@ class ForceArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getForce();
         $this->assertEmpty($result);
     }
-
 }

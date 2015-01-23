@@ -109,5 +109,4 @@ class NoReplaceObjectsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getNoReplaceObjects();
         $this->assertEmpty($result);
     }
-
 }

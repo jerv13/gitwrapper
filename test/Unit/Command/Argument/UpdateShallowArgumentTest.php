@@ -108,5 +108,4 @@ class UpdateShallowArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getUpdateShallow();
         $this->assertEmpty($result);
     }
-
 }

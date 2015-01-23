@@ -21,7 +21,7 @@ namespace Reliv\GitTest\Unit\Command;
 
 use Reliv\Git\Command\CloneCommand;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the GitClone command
@@ -46,6 +46,11 @@ class CloneCommandTest extends Base
     /** @var \Reliv\Git\Command\CloneCommand */
     protected $command;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         $config = $this->getConfig();

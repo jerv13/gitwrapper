@@ -2,6 +2,8 @@
 <ruleset name="Rcm">
     <description>PSR 2 standard with Pear Doc blocks</description>
 
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+
     <!-- Include the whole Zend standard -->
     <rule ref="PSR2"/>
 
@@ -9,4 +11,8 @@
     <rule ref='PEAR.Commenting.ClassComment'/>
     <rule ref='PEAR.Commenting.FunctionComment'/>
     <rule ref='PEAR.Commenting.InlineComment'/>
+
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>*/test/*</exclude-pattern>
+    </rule>
 </ruleset>

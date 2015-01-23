@@ -109,5 +109,4 @@ class HelpArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getHelp();
         $this->assertEmpty($result);
     }
-
 }

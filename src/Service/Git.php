@@ -182,6 +182,15 @@ class Git
         );
     }
 
+    /**
+     * Get a reposigory object
+     *
+     * @param string $repositoryPath           Path to repository
+     * @param string $separateGitDirectoryPath Path to Git directory
+     *
+     * @return void
+     */
+
     public function getRepository(
         $repositoryPath,
         $separateGitDirectoryPath = ''

@@ -108,5 +108,4 @@ class LArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getL();
         $this->assertEmpty($result);
     }
-
 }

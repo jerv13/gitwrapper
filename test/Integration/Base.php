@@ -51,6 +51,11 @@ class Base extends MainBase
     /** @var \Reliv\Git\Command\GitCommand */
     protected $gitCommandWrapper;
 
+    /**
+     * Generic setup for integration tests
+     *
+     * @return void
+     */
     public function setup()
     {
         parent::setup();
@@ -67,6 +72,25 @@ class Base extends MainBase
         $this->command = new $className($this->gitCommandWrapper);
     }
 
+    /**
+     * Get Integration config
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        if (empty($this->config)) {
+            $this->config = include __DIR__ . '/config.php';
+        }
+
+        return $this->config;
+    }
+
+    /**
+     * Initialize Git Repositories for integration tests
+     *
+     * @return void
+     */
     public function initGitRepositories()
     {
         $config = $this->getConfig();
@@ -84,6 +108,7 @@ class Base extends MainBase
         @mkdir($outOfDateRepo, 0777, true);
 
 
+        // @codingStandardsIgnoreStart
         /** Bare Repo */
         shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempBareRepoDir).' init --bare');
 
@@ -97,6 +122,7 @@ class Base extends MainBase
         shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' add testFile');
         shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' commit -m "First Commit"');
         shell_exec(escapeshellcmd($config['gitPath']).' -C '.escapeshellarg($tempWorkingRepo).' push origin master 2>&1');
+        // @codingStandardsIgnoreEnd
 
         $this->assertTrue(is_file($tempBareRepoDir.'/HEAD'));
     }

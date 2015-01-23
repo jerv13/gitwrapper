@@ -126,5 +126,4 @@ class DepthArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getDepth();
         $this->assertEmpty($result);
     }
-
 }

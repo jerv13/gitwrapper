@@ -112,5 +112,4 @@ class OrphanArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getOrphan();
         $this->assertEmpty($result);
     }
-
 }

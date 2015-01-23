@@ -109,5 +109,4 @@ class ProgressArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getProgress();
         $this->assertEmpty($result);
     }
-
 }

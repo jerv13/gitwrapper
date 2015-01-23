@@ -21,7 +21,7 @@ namespace Reliv\GitTest\Unit\Command;
 
 use Reliv\Git\Command\InitCommand;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the Init command

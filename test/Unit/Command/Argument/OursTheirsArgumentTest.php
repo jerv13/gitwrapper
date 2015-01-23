@@ -154,5 +154,4 @@ class OursTheirsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getOursTheirs();
         $this->assertEmpty($result);
     }
-
 }

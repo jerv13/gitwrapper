@@ -139,5 +139,4 @@ class LocalArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getLocal();
         $this->assertEmpty($result);
     }
-
 }

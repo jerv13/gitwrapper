@@ -49,6 +49,11 @@ class StatusCommandTest extends Base
 
     protected $currentDir;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         parent::setup();
@@ -64,6 +69,11 @@ class StatusCommandTest extends Base
         touch('myTestFile');
     }
 
+    /**
+     * Tear down
+     *
+     * @return void
+     */
     public function tearDown()
     {
         unlink('myTestFile');

@@ -152,5 +152,4 @@ class UploadPackArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getUploadPack();
         $this->assertEmpty($result);
     }
-
 }

@@ -43,38 +43,15 @@ class MainBase extends \PHPUnit_Framework_TestCase
 {
     protected $command;
 
-    protected $config;
-
-    public function setup()
+    /**
+     * Recursive remove directory.  Equivalent to `rm -Rf`
+     *
+     * @param string $dir Directory to remove
+     *
+     * @return bool
+     */
+    protected function delTree($dir)
     {
-        $this->initTempDir();
-    }
-
-    public function tearDown()
-    {
-        $config = $this->getConfig();
-        $tempDir = $config['tempFolder'];
-        $this->delTree($tempDir);
-    }
-
-    public function getConfig()
-    {
-        if (empty($this->config)) {
-            $this->config = include __DIR__ . '/config.php';
-        }
-
-        return $this->config;
-    }
-
-    public function initTempDir()
-    {
-        $config = $this->getConfig();
-        $tempDir = $config['tempFolder'];
-        $this->delTree($tempDir);
-        mkdir($tempDir, 0777, true);
-    }
-
-    protected function delTree($dir) {
         if (!is_dir($dir) && !is_file($dir)) {
             return true;
         }

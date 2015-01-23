@@ -109,5 +109,4 @@ class InfoPathArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getInfoPath();
         $this->assertEmpty($result);
     }
-
 }

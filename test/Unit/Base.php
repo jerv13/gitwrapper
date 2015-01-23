@@ -20,10 +20,9 @@
 
 namespace Reliv\GitTest\Unit\Command;
 
-use Reliv\Git\Command\CommandInterface;
 use Reliv\GitTest\MainBase;
 
-require_once __DIR__ . '/../../MainBase.php';
+require_once __DIR__ . '/../MainBase.php';
 
 /**
  * Tag Command
@@ -48,6 +47,11 @@ class Base extends MainBase
 
     protected $config;
 
+    /**
+     * Generic setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         parent::setup();
@@ -70,12 +74,43 @@ class Base extends MainBase
         $this->command = new $className($gitMock);
     }
 
-    protected function defaultTester(CommandInterface $command, Array $defaults) {
-        foreach ($defaults as $prop => $value) {
-            $this->assertEquals(
-                $value,
-                \PHPUnit_Framework_Assert::readAttribute($command, $prop)
-            );
+    /**
+     * Generic TearDown for tests
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        $config = $this->getConfig();
+        $tempDir = $config['tempFolder'];
+        $this->delTree($tempDir);
+    }
+
+    /**
+     * Initialize the temp directory
+     *
+     * @return void
+     */
+    public function initTempDir()
+    {
+        $config = $this->getConfig();
+        $tempDir = $config['tempFolder'];
+        $this->delTree($tempDir);
+        mkdir($tempDir, 0777, true);
+    }
+
+
+    /**
+     * Get the unit test config file.
+     *
+     * @return array
+     */
+    public function getConfig()
+    {
+        if (empty($this->config)) {
+            $this->config = include __DIR__ . '/config.php';
         }
+
+        return $this->config;
     }
 }

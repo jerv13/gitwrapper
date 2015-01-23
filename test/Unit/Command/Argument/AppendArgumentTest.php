@@ -139,5 +139,4 @@ class AppendArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getAppend();
         $this->assertEmpty($result);
     }
-
 }

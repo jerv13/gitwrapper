@@ -108,5 +108,4 @@ class DetachArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getDetach();
         $this->assertEmpty($result);
     }
-
 }

@@ -194,5 +194,4 @@ class ColumnArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getColumn();
         $this->assertEmpty($result);
     }
-
 }

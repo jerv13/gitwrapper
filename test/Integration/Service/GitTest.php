@@ -82,5 +82,4 @@ class GitTest extends Base
 
         $this->delTree($testRepoDir);
     }
-
 }

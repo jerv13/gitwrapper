@@ -139,5 +139,4 @@ class KeepArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getKeep();
         $this->assertEmpty($result);
     }
-
 }

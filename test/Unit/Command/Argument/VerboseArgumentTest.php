@@ -120,5 +120,4 @@ class VerboseArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getVerbose();
         $this->assertEmpty($result);
     }
-
 }

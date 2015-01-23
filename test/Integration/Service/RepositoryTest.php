@@ -83,5 +83,4 @@ class RepositoryTest extends Base
         print $this->repository->inDetachedHead();
         exit;
     }
-
 }

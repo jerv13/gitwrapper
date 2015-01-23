@@ -109,5 +109,4 @@ class HtmlPathArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getHtmlPath();
         $this->assertEmpty($result);
     }
-
 }

@@ -109,5 +109,4 @@ class VersionArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getVersion();
         $this->assertEmpty($result);
     }
-
 }

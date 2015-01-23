@@ -21,7 +21,7 @@ namespace Reliv\GitTest\Unit\Command;
 
 use Reliv\Git\Command\CheckoutCommand;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the Checkout command
@@ -46,6 +46,11 @@ class CheckoutCommandTest extends Base
     /** @var \Reliv\Git\Command\CheckoutCommand */
     protected $command;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         $config = $this->getConfig();

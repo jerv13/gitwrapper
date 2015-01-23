@@ -153,5 +153,4 @@ class GlobPathspecsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getGlobPathspecs();
         $this->assertEmpty($result);
     }
-
 }

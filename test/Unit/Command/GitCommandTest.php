@@ -23,7 +23,7 @@ use Reliv\Git\Command\AddCommand;
 use Reliv\Git\Command\GitCommand;
 use Reliv\Git\Command\CloneCommand;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the Git command

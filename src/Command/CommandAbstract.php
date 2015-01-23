@@ -88,7 +88,6 @@ abstract class CommandAbstract implements CommandInterface
         $command = $this->getCommand();
 
         $message = '';
-        $statusCode = null;
 
         $descriptorspec = array(
             0 => array("pipe", "r"),
@@ -115,7 +114,7 @@ abstract class CommandAbstract implements CommandInterface
         }
 
         if (!empty($errors)) {
-            $response->setErrors(explode("\n",$errors));
+            $response->setErrors(explode("\n", $errors));
         }
 
         return $response;

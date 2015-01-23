@@ -50,6 +50,11 @@ class CheckoutCommandTest extends Base
 
     protected $currentDir;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         $config = $this->getConfig();
@@ -70,6 +75,8 @@ class CheckoutCommandTest extends Base
 
     /**
      * Tear Down
+     *
+     * @return void
      */
     public function tearDown()
     {

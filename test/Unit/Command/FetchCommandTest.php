@@ -21,7 +21,7 @@ namespace Reliv\GitTest\Unit\Command;
 
 use Reliv\Git\Command\FetchCommand;
 
-require_once __DIR__ . '/Base.php';
+require_once __DIR__ . '/../Base.php';
 
 /**
  * Test for the Fetch command
@@ -46,6 +46,11 @@ class FetchCommandTest extends Base
     /** @var \Reliv\Git\Command\FetchCommand */
     protected $command;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         parent::setup();

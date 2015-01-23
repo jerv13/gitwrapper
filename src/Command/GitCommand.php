@@ -60,7 +60,6 @@ use Reliv\Git\Exception\MethodNotFoundException;
  * @method AddCommand      add()                       Add file contents to the index
  * @method BisectCommand   bisect()                    Find by binary search the change that introduced a bug
  * @method BranchCommand   branch()                    List, create, or delete branches
- * @method CheckoutCommand checkout()                  Checkout a branch or paths to the working tree
  * @method CloneCommand    clone($from, $toDir = null) Clone a repository into a new directory
  * @method CommitCommand   commit()                    Record changes to the repository
  * @method DiffCommand     diff()                      Show changes between commits, commit and working tree, etc

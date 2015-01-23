@@ -139,5 +139,4 @@ class PruneArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getPrune();
         $this->assertEmpty($result);
     }
-
 }

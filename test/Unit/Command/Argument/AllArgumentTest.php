@@ -108,5 +108,4 @@ class AllArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getAll();
         $this->assertEmpty($result);
     }
-
 }

@@ -142,5 +142,4 @@ class NoTagsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getNoTags();
         $this->assertEmpty($result);
     }
-
 }

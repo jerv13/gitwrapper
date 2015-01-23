@@ -219,5 +219,4 @@ class SharedArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getShared();
         $this->assertEmpty($result);
     }
-
 }

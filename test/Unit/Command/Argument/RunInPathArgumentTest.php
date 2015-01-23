@@ -21,7 +21,7 @@ namespace Reliv\GitTest\Unit\Command\Argument;
 
 use Reliv\GitTest\Unit\Command\Base;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../../Base.php';
 
 
 /**
@@ -135,5 +135,4 @@ class RunInPathArgumentTest extends Base
         $result = $this->argument->getRunInPath();
         $this->assertEmpty($result);
     }
-
 }

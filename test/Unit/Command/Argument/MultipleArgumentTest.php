@@ -108,5 +108,4 @@ class MultipleArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getMultiple();
         $this->assertEmpty($result);
     }
-
 }

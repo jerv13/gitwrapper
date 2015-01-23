@@ -53,7 +53,9 @@ class IgnoreSkipWorktreeBitsArgumentTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->argument = $this->getObjectForTrait('Reliv\Git\Command\Argument\IgnoreSkipWorktreeBitsArgument');
-        $this->assertTrue(in_array('Reliv\Git\Command\Argument\IgnoreSkipWorktreeBitsArgument', class_uses($this->argument)));
+        $this->assertTrue(
+            in_array('Reliv\Git\Command\Argument\IgnoreSkipWorktreeBitsArgument', class_uses($this->argument))
+        );
     }
 
     /**

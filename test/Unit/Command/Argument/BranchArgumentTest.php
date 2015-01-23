@@ -117,5 +117,4 @@ class BranchArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getBranch();
         $this->assertEmpty($result);
     }
-
 }

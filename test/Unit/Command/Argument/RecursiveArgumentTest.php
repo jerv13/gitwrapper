@@ -108,5 +108,4 @@ class RecursiveArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getRecursive();
         $this->assertEmpty($result);
     }
-
 }

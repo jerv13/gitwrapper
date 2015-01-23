@@ -51,6 +51,11 @@ class GitCloneTest extends Base
     protected $repoToClone;
     protected $clonedRepoDir;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         $config = $this->getConfig();
@@ -68,6 +73,11 @@ class GitCloneTest extends Base
         );
     }
 
+    /**
+     * Tear down for tests
+     *
+     * @return void
+     */
     public function tearDown()
     {
         parent::tearDown();

@@ -139,5 +139,4 @@ class QuietArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getQuiet();
         $this->assertEmpty($result);
     }
-
 }

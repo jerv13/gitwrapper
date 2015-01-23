@@ -109,5 +109,4 @@ class ICasePathspecsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getICasePathspecs();
         $this->assertEmpty($result);
     }
-
 }

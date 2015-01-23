@@ -139,5 +139,4 @@ class NoCheckoutArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getNoCheckout();
         $this->assertEmpty($result);
     }
-
 }

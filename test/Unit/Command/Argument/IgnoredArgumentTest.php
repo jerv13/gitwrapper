@@ -109,5 +109,4 @@ class IgnoredArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getIgnored();
         $this->assertEmpty($result);
     }
-
 }

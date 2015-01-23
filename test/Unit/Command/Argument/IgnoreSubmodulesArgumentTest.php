@@ -125,5 +125,4 @@ class IgnoreSubmodulesArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getIgnoreSubmodules();
         $this->assertEmpty($result);
     }
-
 }

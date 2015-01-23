@@ -138,5 +138,4 @@ class TagsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getTags();
         $this->assertEmpty($result);
     }
-
 }

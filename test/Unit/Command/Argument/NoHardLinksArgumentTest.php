@@ -109,5 +109,4 @@ class NoHardLinksArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getNoHardLinks();
         $this->assertEmpty($result);
     }
-
 }

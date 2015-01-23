@@ -93,7 +93,7 @@ class PatchArgumentTest extends \PHPUnit_Framework_TestCase
      *
      * @covers \Reliv\Git\Command\Argument\PatchArgument
      */
-    public function testp()
+    public function testP()
     {
         $this->argument->p();
         $this->assertTrue(\PHPUnit_Framework_Assert::readAttribute($this->argument, 'patch'));
@@ -139,5 +139,4 @@ class PatchArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getPatch();
         $this->assertEmpty($result);
     }
-
 }

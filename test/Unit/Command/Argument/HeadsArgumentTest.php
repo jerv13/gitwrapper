@@ -137,5 +137,4 @@ class HeadsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getHeads();
         $this->assertEmpty($result);
     }
-
 }

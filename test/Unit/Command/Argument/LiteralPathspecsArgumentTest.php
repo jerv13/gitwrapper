@@ -108,5 +108,4 @@ class LiteralPathspecsArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getLiteralPathspecs();
         $this->assertEmpty($result);
     }
-
 }

@@ -50,6 +50,11 @@ class GitTest extends MainBase
 
     protected $tempFolder;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         $config = $this->getConfig();
@@ -58,6 +63,13 @@ class GitTest extends MainBase
         $this->tempFolder = $config['tempFolder'];
     }
 
+    /**
+     * Test the repositories are initialized
+     *
+     * @return void
+     *
+     * @covers nothing
+     */
     public function testInitializeRepository()
     {
         $testRepoDir = $this->tempFolder.'/integrationGitInitTest';
@@ -74,5 +86,4 @@ class GitTest extends MainBase
 
         $this->delTree($testRepoDir);
     }
-
 }

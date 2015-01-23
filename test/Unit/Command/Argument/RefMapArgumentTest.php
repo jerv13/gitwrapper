@@ -114,5 +114,4 @@ class RefMapArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getRefMap();
         $this->assertEmpty($result);
     }
-
 }

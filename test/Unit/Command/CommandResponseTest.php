@@ -128,6 +128,8 @@ class CommandResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * Test Successful Response
      *
+     * @return void
+     *
      * @covers \Reliv\Git\Command\CommandResponse
      */
     public function testIsSuccessTrue()
@@ -138,6 +140,8 @@ class CommandResponseTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Test Failed Response
+     *
+     * @return void
      *
      * @covers \Reliv\Git\Command\CommandResponse
      */

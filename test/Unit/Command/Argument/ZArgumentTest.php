@@ -109,5 +109,4 @@ class ZArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getZ();
         $this->assertEmpty($result);
     }
-
 }

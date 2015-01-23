@@ -139,5 +139,4 @@ class MergeArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getMerge();
         $this->assertEmpty($result);
     }
-
 }

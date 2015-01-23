@@ -21,7 +21,7 @@ namespace Reliv\GitTest\Unit\Command\Argument;
 
 use Reliv\GitTest\Unit\Command\Base;
 
-require_once __DIR__ . '/../Base.php';
+require_once __DIR__ . '/../../Base.php';
 
 
 /**
@@ -134,5 +134,4 @@ class GitDirArgumentTest extends Base
         $result = $this->argument->getGitDir();
         $this->assertEmpty($result);
     }
-
 }

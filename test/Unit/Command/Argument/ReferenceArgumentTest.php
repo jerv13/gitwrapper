@@ -115,5 +115,4 @@ class ReferenceArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getReference();
         $this->assertEmpty($result);
     }
-
 }

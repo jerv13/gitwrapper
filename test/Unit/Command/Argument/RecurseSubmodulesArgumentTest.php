@@ -53,7 +53,9 @@ class RecurseSubmodulesArgumentTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->argument = $this->getObjectForTrait('Reliv\Git\Command\Argument\RecurseSubmodulesArgument');
-        $this->assertTrue(in_array('Reliv\Git\Command\Argument\RecurseSubmodulesArgument', class_uses($this->argument)));
+        $this->assertTrue(
+            in_array('Reliv\Git\Command\Argument\RecurseSubmodulesArgument', class_uses($this->argument))
+        );
     }
 
     /**
@@ -219,5 +221,4 @@ class RecurseSubmodulesArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getRecurseSubmodules();
         $this->assertEmpty($result);
     }
-
 }

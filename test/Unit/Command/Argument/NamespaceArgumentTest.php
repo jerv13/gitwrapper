@@ -127,5 +127,4 @@ class NamespaceArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getNamespace();
         $this->assertEmpty($result);
     }
-
 }

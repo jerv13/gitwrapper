@@ -142,5 +142,4 @@ class CArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getC();
         $this->assertEmpty($result);
     }
-
 }

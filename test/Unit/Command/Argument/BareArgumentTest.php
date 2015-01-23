@@ -108,5 +108,4 @@ class BareArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getBare();
         $this->assertEmpty($result);
     }
-
 }

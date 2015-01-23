@@ -18,6 +18,7 @@
  */
 
 namespace Reliv\GitTest\Integration\Command;
+
 use Reliv\GitTest\Integration\Base;
 
 require_once __DIR__ . '/../Base.php';
@@ -47,6 +48,11 @@ class FetchCommandTest extends Base
 
     protected $currentDir;
 
+    /**
+     * Setup for tests
+     *
+     * @return void
+     */
     public function setup()
     {
         parent::setup();
@@ -63,6 +69,8 @@ class FetchCommandTest extends Base
 
     /**
      * Tear Down
+     *
+     * @return void
      */
     public function tearDown()
     {

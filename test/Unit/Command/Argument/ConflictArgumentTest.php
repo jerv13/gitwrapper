@@ -140,5 +140,4 @@ class ConflictArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getConflict();
         $this->assertEmpty($result);
     }
-
 }

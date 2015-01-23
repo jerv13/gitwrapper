@@ -187,5 +187,4 @@ class TrackArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getTrack();
         $this->assertEmpty($result);
     }
-
 }

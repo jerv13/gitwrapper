@@ -53,7 +53,9 @@ class ShortLongPorcelainArgumentTest extends \PHPUnit_Framework_TestCase
     public function setup()
     {
         $this->argument = $this->getObjectForTrait('Reliv\Git\Command\Argument\ShortLongPorcelainArgument');
-        $this->assertTrue(in_array('Reliv\Git\Command\Argument\ShortLongPorcelainArgument', class_uses($this->argument)));
+        $this->assertTrue(
+            in_array('Reliv\Git\Command\Argument\ShortLongPorcelainArgument', class_uses($this->argument))
+        );
     }
 
     /*
@@ -248,5 +250,4 @@ class ShortLongPorcelainArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getShortLongPorcelain();
         $this->assertEmpty($result);
     }
-
 }

@@ -152,5 +152,4 @@ class PaginateArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getPaginate();
         $this->assertEmpty($result);
     }
-
 }

@@ -108,5 +108,4 @@ class DryRunArgumentTest extends \PHPUnit_Framework_TestCase
         $result = $this->argument->getDryRun();
         $this->assertEmpty($result);
     }
-
 }
