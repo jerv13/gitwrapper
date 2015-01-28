@@ -80,14 +80,18 @@ class Repository
     public function checkout($branchOrTag, $trackingRef = null)
     {
         if ($trackingRef) {
-            $result = $this->gitCommandWrapper->checkout($trackingRef)->b($branchOrTag)->track()->execute();
+            $command = $this->gitCommandWrapper->checkout($trackingRef)->b($branchOrTag)->track();
+            $result = $command->execute();
         } else {
-            $result = $this->gitCommandWrapper->checkout($trackingRef)->execute();
+            $command = $this->gitCommandWrapper->checkout($branchOrTag);
+            $result = $command->execute();
         }
 
         if (!$result->isSuccess()) {
             throw new RuntimeException(
                 "Unable to checkout ".$branchOrTag
+                ." \n\nCommand:\n".$command->getCommand()
+                ." \n\nErrors:\n".implode("\n", $result->getErrors())
             );
         }
 
@@ -99,7 +103,7 @@ class Repository
      *
      * @param null|Repository|string $remote  Optional.  Repository object or Url to remote repository to fetch from.
      *                                        If not supplied it will fetch from all remotes.
-     * @param null|string            $refspec Refspec to fetch.  IE. origin/master
+     * @param null|string            $refspec Refspec to fetch.  IE. master
      * @param null|integer           $depth   Depth to fetch.  Only use this if you know what you're doing.
      *
      * @return $this
@@ -171,7 +175,14 @@ class Repository
      *
      * @return Repository
      */
-    public function cloneTo($path, $depth = null)
+    public function cloneTo($path, $branch = null, $depth = null)
+    {
+        $newRepository = $this->initAndFetchRemote($path, $branch, $depth);
+        $newRepository->checkout($branch, 'origin/'.$branch);
+        return $newRepository;
+    }
+
+    protected function initAndFetchRemote($path, $branch = null, $depth = null)
     {
         if (!is_dir($path)) {
             throw new DirectoryNotFoundException(
@@ -185,20 +196,25 @@ class Repository
             );
         }
 
-        if ($this->inDetachedHead()) {
-            throw new DetachedHeadException(
-                "Unable to clone repository while in a detached head state."
-            );
+        $gitCommand = $this->gitCommandWrapper;
+
+        if (!$branch) {
+
+            if ($this->inDetachedHead()) {
+                throw new DetachedHeadException(
+                    "Unable to clone repository while in a detached head state."
+                );
+            }
+
+            $branch = $this->getCurrentBranch();
         }
 
-        $gitCommand = $this->gitCommandWrapper;
-        $currentBranch = $this->getCurrentBranch();
-
+        $gitCommand->runInPath($path);
         $result = $gitCommand->init()->execute();
 
         if (!$result->isSuccess()) {
             throw new RuntimeException(
-                "Unable to initialize repository at ".$path
+                "Unable to initialize repository at ".$path. "\n Errors: ".implode("\n",$result->getErrors())
             );
         }
 
@@ -206,14 +222,29 @@ class Repository
         $newRepository->addRemote('origin', $this);
 
         if ($depth) {
-            $newRepository->fetch($this, 'origin/'.$currentBranch, $depth);
+            $newRepository->fetch('origin', $branch, $depth);
         } else {
             $newRepository->fetch();
         }
 
-        $newRepository->checkout($currentBranch, 'origin/'.$currentBranch);
-
         return $newRepository;
+    }
+
+    /**
+     * Copy a branch to a different directory.  Note: This will not "clone" but create a working copy.
+     *
+     * This will simulate a copy method due to the fact that `git archive` has been disabled on GitHub.
+     *
+     * @param string $branch Branch to copy
+     * @param string $path   Path to clone to
+     *
+     */
+    public function copyBranchTo($path, $branch)
+    {
+        $path = rtrim($path, "/\\\t\n\r\0\x0B");
+        $this->initAndFetchRemote($path, $branch, 1);
+        $this->checkout('FETCH_HEAD');
+        $this->delTree($path.DIRECTORY_SEPARATOR.'.git');
     }
 
     /**
@@ -291,7 +322,16 @@ class Repository
      */
     public function getLocalTags()
     {
-        return $this->getRef('tags/*');
+        $refs = $this->getRef('tags/*');
+
+        $return = array();
+
+        foreach ($refs as $tag => $commit) {
+            $localTag = str_replace('refs/tags/', '', $tag);
+            $return[$localTag] = $commit;
+        }
+
+        return $return;
     }
 
     /**
@@ -341,9 +381,8 @@ class Repository
         foreach ($raw as $ref) {
             list($commit, $refSpec) = explode("\t", $ref);
 
-            if (strpos($refSpec, '^{}') !== false) {
-                continue;
-            }
+            /* Dereference tags */
+            $refSpec = str_replace('^{}', '', $refSpec);
 
             $this->cachedRefs[$refSpec] = $commit;
         }
@@ -401,7 +440,26 @@ class Repository
     public function getRepositoryPath()
     {
         return $this->repositoryPath;
+    }
 
+    /**
+     * Method to delete a directory recursivly.  Needed for the copy to command.
+     *
+     * @param strin $dir Directory to remove
+     *
+     * @return bool
+     */
+    protected function delTree($dir)
+    {
+        if (!is_dir($dir) && !is_file($dir)) {
+            return true;
+        }
 
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach ($files as $file) {
+            (is_dir("$dir/$file")) ? $this->delTree("$dir/$file") : unlink("$dir/$file");
+        }
+
+        return rmdir($dir);
     }
 }
